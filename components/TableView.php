@@ -185,10 +185,10 @@ class TableView extends Widget
                 $column = $this->createDataColumn($column);
             } else {
                 $column = Yii::createObject(array_merge([
-                            'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::className(),
-                            'grid' => $this,
-                            'format' => $this->columnFormat,
-                                        ], $column));
+                    'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::className(),
+                    'grid' => $this,
+                    'format' => $this->columnFormat,
+                ], $column));
             }
             if (!$column->visible) {
                 unset($this->columns[$i]);
@@ -211,11 +211,11 @@ class TableView extends Widget
         }
 
         return Yii::createObject([
-                    'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::className(),
-                    'grid' => $this,
-                    'attribute' => $matches[1],
-                    'format' => isset($matches[3]) ? $matches[3] : $this->columnFormat,
-                    'label' => isset($matches[5]) ? $matches[5] : null,
+            'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::className(),
+            'grid' => $this,
+            'attribute' => $matches[1],
+            'format' => isset($matches[3]) ? $matches[3] : $this->columnFormat,
+            'label' => isset($matches[5]) ? $matches[5] : null,
         ]);
     }
 
@@ -235,5 +235,4 @@ class TableView extends Widget
             }
         }
     }
-
 }

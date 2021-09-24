@@ -29,5 +29,4 @@ class DatepickerAsset extends AssetBundle
     public $depends = [
         'app\assets\BootstrapAsset',
     ];
-
 }

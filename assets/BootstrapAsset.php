@@ -16,5 +16,4 @@ class BootstrapAsset extends AssetBundle
         'yii\bootstrap\BootstrapAsset',
         'yii\bootstrap\BootstrapPluginAsset',
     ];
-
 }

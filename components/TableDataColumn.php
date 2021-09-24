@@ -80,7 +80,6 @@ class TableDataColumn extends BaseObject
         $model = $this->grid->filterModel;
         $form = $this->grid->form;
         if ($this->filter === false) {
-            
         } elseif ($this->filter instanceof Closure) {
             return call_user_func($this->filter, $model, null, null, $this, $form);
         } elseif ($this->value !== false && $this->value instanceof Closure) {
@@ -122,5 +121,4 @@ class TableDataColumn extends BaseObject
         }
         return null;
     }
-
 }

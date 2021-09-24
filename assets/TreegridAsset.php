@@ -29,5 +29,4 @@ class TreegridAsset extends AssetBundle
     public $depends = [
         'app\assets\BootstrapAsset',
     ];
-
 }

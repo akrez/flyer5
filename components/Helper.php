@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\components\Jdf;
 use yii\base\Component;
 
 class Helper extends Component
@@ -28,10 +29,10 @@ class Helper extends Component
 
     public static function formatDate($input, $format = 'Y-m-d')
     {
-        $input = preg_split('/\D/', $input, NULL, PREG_SPLIT_NO_EMPTY);
-        if (count($input) == 3 && jdf::jcheckdate($input[1], $input[2], $input[0])) {
-            $time = jdf::jmktime(0, 0, 0, $input[1], $input[2], $input[0]);
-            return jdf::jdate($format, $time);
+        $input = preg_split('/\D/', $input, '', PREG_SPLIT_NO_EMPTY);
+        if (count($input) >= 3 && Jdf::jcheckdate($input[1], $input[2], $input[0])) {
+            $time = Jdf::jmktime(0, 0, 0, $input[1], $input[2], $input[0]);
+            return Jdf::jdate($format, $time);
         }
         return null;
     }
@@ -49,16 +50,16 @@ class Helper extends Component
             "7777777777",
             "8888888888",
             "9999999999",
-            "0000000000"];
+            "0000000000"
+        ];
 
         if (in_array($NationalCode, $notNationalCode)) {
-            
         } else {
 
             if (
-                    (is_numeric($NationalCode)) &&
-                    (strlen($NationalCode) == 10) &&
-                    (strspn($NationalCode, $NationalCode[0]) != strlen($NationalCode))
+                (is_numeric($NationalCode)) &&
+                (strlen($NationalCode) == 10) &&
+                (strspn($NationalCode, $NationalCode[0]) != strlen($NationalCode))
             ) {
                 $subMid = substr($NationalCode, (10 - 1), 1);
                 $getNum = 0;
@@ -67,8 +68,8 @@ class Helper extends Component
                 }
                 $modulus = ($getNum % 11);
                 if (
-                        (($modulus < 2) && ($subMid == $modulus)) ||
-                        (($modulus >= 2) && ($subMid == (11 - $modulus)))
+                    (($modulus < 2) && ($subMid == $modulus)) ||
+                    (($modulus >= 2) && ($subMid == (11 - $modulus)))
                 ) {
                     return true;
                 }
@@ -76,5 +77,4 @@ class Helper extends Component
         }
         return false;
     }
-
 }

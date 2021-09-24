@@ -29,5 +29,4 @@ class Storage extends Component
         }
         return false;
     }
-
 }

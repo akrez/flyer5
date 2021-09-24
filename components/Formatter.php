@@ -17,5 +17,4 @@ class Formatter extends \yii\i18n\Formatter
         }
         return $this->nullDisplay;
     }
-
 }

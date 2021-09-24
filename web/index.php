@@ -22,17 +22,19 @@ function ed($input)
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
+defined('BASE_PATH') or define('BASE_PATH', dirname(__DIR__));
+defined('VENDOR_PATH') or define('VENDOR_PATH', BASE_PATH . '/vendor');
 
-require __DIR__ . '/../../vendor/autoload.php';
-require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';
+require VENDOR_PATH . '/autoload.php';
+require VENDOR_PATH . '/yiisoft/yii2/Yii.php';
 
 $config = [
     'id' => 'flyer5',
     'name' => 'راپکو',
     'language' => 'fa-IR',
-    'basePath' => dirname(__DIR__),
+    'basePath' => BASE_PATH,
     'bootstrap' => ['log'],
-    'vendorPath' => dirname(__DIR__) . '../../vendor',
+    'vendorPath' => VENDOR_PATH,
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
@@ -40,7 +42,7 @@ $config = [
     'components' => [
         'request' => [
             'cookieValidationKey' => 'eZmKmrB7TIBhGNCWrF1OeqrKAxWCDlzC',
-            'baseUrl' => '/projects/flyer5',
+            'baseUrl' => '/flyer5',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

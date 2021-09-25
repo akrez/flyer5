@@ -21,7 +21,13 @@ $this->registerCss("
 $__history = (array) Yii::$app->session->get('__history', []);
 $__controllerId = Yii::$app->controller->id;
 $__actionId = Yii::$app->controller->action->id;
-if (isset($__history[0]) && isset($__history[0]['controllerId']) && isset($__history[0]['actionId']) && ($__history[0]['controllerId'] == $__controllerId && $__history[0]['actionId'] == $__actionId)) {
+if (
+    isset($__history[0]) &&
+    isset($__history[0]['controllerId']) &&
+    isset($__history[0]['actionId']) &&
+    ($__history[0]['controllerId'] == $__controllerId && $__history[0]['actionId'] == $__actionId)
+) {
+} elseif (Yii::$app->errorHandler->errorAction == $__controllerId . '/' . $__actionId) {
 } else {
     array_unshift($__history, [
         'controllerId' => Yii::$app->controller->id,

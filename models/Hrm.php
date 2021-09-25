@@ -49,7 +49,6 @@ class Hrm extends ActiveRecord
     public function validateDate($attribute, $params)
     {
         if ($this->$attribute = Helper::formatDate($this->$attribute)) {
-            
         } else {
             $this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', ['attribute' => $this->getAttributeLabel($attribute)]));
         }
@@ -106,4 +105,10 @@ class Hrm extends ActiveRecord
         return Hrm::find()->select('fullname')->where(['role' => 2])->indexBy('id')->column();
     }
 
+    public static function blogValidQuery($id = null)
+    {
+        $query = Hrm::find();
+        $query->andFilterWhere(['id' => $id]);
+        return $query;
+    }
 }

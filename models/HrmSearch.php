@@ -41,14 +41,20 @@ class HrmSearch extends Hrm
      */
     public function search($params)
     {
-        $query = Hrm::find();
+        $query = Hrm::blogValidQuery();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['id' => SORT_DESC,]],
-            'pagination' => ['pagesize' => 5,]
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+            'pagination' => [
+                'pageSize' => 50,
+            ],
         ]);
 
         $this->load($params);
@@ -67,15 +73,14 @@ class HrmSearch extends Hrm
         ]);
 
         $query
-                ->andFilterWhere(['like', 'fullname', $this->fullname])
-                ->andFilterWhere(['like', 'fatherName', $this->fatherName])
-                ->andFilterWhere(['like', 'code', $this->code])
-                ->andFilterWhere(['like', 'mobile', $this->mobile])
-                ->andFilterWhere(['like', 'nationalCode', $this->nationalCode])
-                ->andFilterWhere(['like', 'birthdate', $this->birthdate])
-                ->andFilterWhere(['like', 'des', $this->des]);
+            ->andFilterWhere(['like', 'fullname', $this->fullname])
+            ->andFilterWhere(['like', 'fatherName', $this->fatherName])
+            ->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'mobile', $this->mobile])
+            ->andFilterWhere(['like', 'nationalCode', $this->nationalCode])
+            ->andFilterWhere(['like', 'birthdate', $this->birthdate])
+            ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
     }
-
 }

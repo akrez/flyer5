@@ -2,8 +2,11 @@
 
 namespace app\components;
 
+use Yii;
 use app\components\Jdf;
 use yii\base\Component;
+use yii\db\ActiveQuery;
+use yii\web\NotFoundHttpException;
 
 class Helper extends Component
 {
@@ -29,7 +32,7 @@ class Helper extends Component
 
     public static function formatDate($input, $format = 'Y-m-d')
     {
-        $input = preg_split('/\D/', $input, '', PREG_SPLIT_NO_EMPTY);
+        $input = preg_split('/\D/', $input, -1, PREG_SPLIT_NO_EMPTY);
         if (count($input) >= 3 && Jdf::jcheckdate($input[1], $input[2], $input[0])) {
             $time = Jdf::jmktime(0, 0, 0, $input[1], $input[2], $input[0]);
             return Jdf::jdate($format, $time);
@@ -76,5 +79,55 @@ class Helper extends Component
             }
         }
         return false;
+    }
+
+    public static function store(&$newModel, $post, $staticAttributes = [], $setFlash = true)
+    {
+        if (!$newModel->load($post)) {
+            return null;
+        }
+        //
+        $newModel->setAttributes($staticAttributes, false);
+        $isNewRecord = $newModel->isNewRecord;
+        $isSuccessful = $newModel->save();
+        //
+        if (!$setFlash) {
+            return $isSuccessful;
+        }
+        //
+        if ($isSuccessful) {
+            if ($isNewRecord) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'alertAddSuccessfull'));
+            } else {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'alertUpdateSuccessfull'));
+            }
+        } else {
+            $errors = $newModel->getErrorSummary(true);
+            Yii::$app->session->setFlash('danger', reset($errors));
+        }
+        //
+        return $isSuccessful;
+    }
+
+    public static function delete(&$model, $setFlash = true)
+    {
+        $isSuccessful = $model->delete();
+        if ($setFlash) {
+            if ($isSuccessful) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'alertRemoveSuccessfull'));
+            } else {
+                Yii::$app->session->setFlash('danger', Yii::t('app', 'alertRemoveUnSuccessfull'));
+            }
+        }
+        return $isSuccessful;
+    }
+
+    public static function findOrFail(ActiveQuery $query)
+    {
+        $model = $query->one();
+        if ($model) {
+            return $model;
+        }
+        throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
     }
 }

@@ -3,23 +3,16 @@
 namespace app\controllers;
 
 use app\models\Type;
+use app\components\Helper;
 use app\models\TypeSearch;
 use Yii;
 
 class TypeController extends Controller
 {
 
-    public static $category = Type::CATEGORY_RESELLER;
-
-    public function init()
+    public static function getCategoryId()
     {
-        parent::init();
-        $this->newModel = new Type([
-            'categoryId' => self::$category,
-        ]);
-        $this->searchModel = new TypeSearch([
-            'categoryId' => self::$category,
-        ]);
+        return Type::class;
     }
 
     public function behaviors()
@@ -36,20 +29,35 @@ class TypeController extends Controller
 
     public function actionIndex($id = null)
     {
-        return $this->commonIndex($id, [
-            'view' => '/type/index',
-            'extraParams' => [
-                'categoryId' => self::$category,
-            ],
-            'staticAttributes' => [
-                'categoryId' => self::$category,
-            ],
-        ]);
-    }
-
-    public function actionDelete($id)
-    {
-        return $this->commonDelete($id);
+        $newModelClass = static::getCategoryId();
+        $id = empty($id) ? null : intval($id);
+        $post = Yii::$app->request->post();
+        $state = Yii::$app->request->get('state', '');
+        $updateCacheNeeded = null;
+        //
+        if ($id) {
+            $model = Helper::findOrFail(Type::blogValidQuery($id)->andWhere(['id' => $id]));
+        } else {
+            $model = null;
+        }
+        $newModel = new $newModelClass();
+        $searchModel = new TypeSearch();
+        //
+        if ($state == 'save' && $newModel->load($post)) {
+            $updateCacheNeeded = Helper::store($newModel, $post, []);
+        } elseif ($state == 'update' && $model) {
+            $updateCacheNeeded = Helper::store($model, $post, []);
+        } elseif ($state == 'remove' && $model) {
+            $updateCacheNeeded = Helper::delete($model);
+        }
+        if ($updateCacheNeeded) {
+            $newModel = new $newModelClass();
+        }
+        //
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, static::getCategoryId());
+        return $this->render('..\type\index', [
+            'state' => $state,
+        ] + compact('newModel', 'searchModel', 'model', 'dataProvider'));
     }
 
     public function actionSuggest()
@@ -57,7 +65,7 @@ class TypeController extends Controller
         $term = Yii::$app->request->get('term');
         $results = [];
         $databaseResults = Type::find()
-            ->where(['categoryId' => Type::CATEGORY_RESELLER])
+            ->where(['categoryId' => static::getCategoryId()])
             ->andFilterWhere([
                 'OR',
                 ['LIKE', 'name', $term],

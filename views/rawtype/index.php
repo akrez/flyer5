@@ -1,6 +1,5 @@
 <?php
 
-use app\assets\StretchyAsset;
 use app\components\TableView;
 use kartik\select2\Select2;
 use yii\helpers\Html;
@@ -8,7 +7,6 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 
 $this->title = $newModel::modelName() . ': ' . $parentModel->name . ' (' . $parentModel->shortname . ')';
-StretchyAsset::register($this);
 ?>
 
 <h1 class="pb20"><?= Html::encode($this->title) ?></h1>

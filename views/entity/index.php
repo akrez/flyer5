@@ -1,7 +1,6 @@
 <?php
 
 use app\assets\DatepickerAsset;
-use app\assets\StretchyAsset;
 use app\components\TableView;
 use app\models\Entity;
 use app\models\RawEntity;
@@ -15,7 +14,6 @@ use yii\web\View;
 use yii\widgets\LinkPager;
 
 $this->title = Entity::modelTitle($categoryId);
-StretchyAsset::register($this);
 DatepickerAsset::register($this);
 $this->registerJs('
     $(".entitySubmitatDatepicker, .entityFactoratDatepicker, .entityProductatDatepicker").persianDatepicker({

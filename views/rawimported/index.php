@@ -1,7 +1,6 @@
 <?php
 
 use app\assets\DatepickerAsset;
-use app\assets\StretchyAsset;
 use app\components\TableView;
 use kartik\select2\Select2;
 use yii\helpers\Html;
@@ -11,7 +10,6 @@ use yii\web\View;
 
 $this->title = $newModel::modelName();
 DatepickerAsset::register($this);
-StretchyAsset::register($this);
 $this->registerJs('
     $(".rawimportedSubmitatDatepicker, .rawimportedFactoratDatepicker").persianDatepicker({
         calendar: {

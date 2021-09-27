@@ -1,12 +1,10 @@
 <?php
 
-use app\assets\StretchyAsset;
 use app\components\TableView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = $newModel::modelName();
-StretchyAsset::register($this);
 ?>
 
 <h1 class="pb20"><?= Html::encode($this->title) ?></h1>

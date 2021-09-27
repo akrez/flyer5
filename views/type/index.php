@@ -1,6 +1,5 @@
 <?php
 
-use app\assets\StretchyAsset;
 use app\components\TableView;
 use app\models\RawType;
 use app\models\Type;
@@ -10,7 +9,6 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 
 $this->title = $newModel::modelTitle($categoryId);
-StretchyAsset::register($this);
 ?>
 
 <h1 class="pb20"><?= Html::encode($this->title) ?></h1>

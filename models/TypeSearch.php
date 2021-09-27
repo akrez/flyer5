@@ -26,9 +26,18 @@ class TypeSearch extends Type
         return Model::scenarios();
     }
 
-    public function search($params, $newModel, $parentModel)
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function search($params, $categoryId = null)
     {
-        $query = $newModel::find()->where(['categoryId' => $newModel->categoryId])->with('parent');
+        $query = Type::find()
+            ->andFilterWhere(['categoryId' => $categoryId])
+            ->with('parent');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -50,12 +59,11 @@ class TypeSearch extends Type
         ]);
 
         $query
-                ->andFilterWhere(['like', 'name', $this->name])
-                ->andFilterWhere(['like', 'shortname', $this->shortname])
-                ->andFilterWhere(['like', 'unit', $this->unit])
-                ->andFilterWhere(['like', 'des', $this->des]);
+            ->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'shortname', $this->shortname])
+            ->andFilterWhere(['like', 'unit', $this->unit])
+            ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
     }
-
 }

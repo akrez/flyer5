@@ -30,7 +30,7 @@ class HrmController extends Controller
         $updateCacheNeeded = null;
         //
         if ($id) {
-            $model = Helper::findOrFail(Hrm::blogValidQuery($id)->andWhere(['id' => $id]));
+            $model = Helper::findOrFail(Hrm::validQuery($id)->andWhere(['id' => $id]));
         } else {
             $model = null;
         }

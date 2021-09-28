@@ -10,7 +10,7 @@ use Yii;
 class TypeController extends Controller
 {
 
-    public static function getCategoryId()
+    public static function getCategoryClass()
     {
         return Type::class;
     }
@@ -27,45 +27,50 @@ class TypeController extends Controller
         ]);
     }
 
-    public function actionIndex($id = null)
+    protected function index($id = null)
     {
-        $newModelClass = static::getCategoryId();
+        $newCategoryModel = static::getCategoryClass();
         $id = empty($id) ? null : intval($id);
         $post = Yii::$app->request->post();
         $state = Yii::$app->request->get('state', '');
         $updateCacheNeeded = null;
         //
         if ($id) {
-            $model = Helper::findOrFail(Type::blogValidQuery($id)->andWhere(['id' => $id]));
+            $model = Helper::findOrFail($newCategoryModel::validQuery()->andWhere(['id' => $id]));
         } else {
             $model = null;
         }
-        $newModel = new $newModelClass();
+        $newModel = new $newCategoryModel();
         $searchModel = new TypeSearch();
         //
         if ($state == 'save' && $newModel->load($post)) {
-            $updateCacheNeeded = Helper::store($newModel, $post, []);
+            $updateCacheNeeded = Helper::store($newModel, $post, [
+                'categoryId' => $newCategoryModel,
+            ]);
         } elseif ($state == 'update' && $model) {
-            $updateCacheNeeded = Helper::store($model, $post, []);
+            $updateCacheNeeded = Helper::store($model, $post, [
+                'categoryId' => $newCategoryModel,
+            ]);
         } elseif ($state == 'remove' && $model) {
             $updateCacheNeeded = Helper::delete($model);
         }
         if ($updateCacheNeeded) {
-            $newModel = new $newModelClass();
+            $newModel = new $newCategoryModel();
         }
         //
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, static::getCategoryId());
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $newModel);
         return $this->render('..\type\index', [
             'state' => $state,
         ] + compact('newModel', 'searchModel', 'model', 'dataProvider'));
     }
 
-    public function actionSuggest()
+    protected function suggest()
     {
+        $modelCategory = static::getCategoryClass();
         $term = Yii::$app->request->get('term');
         $results = [];
-        $databaseResults = Type::find()
-            ->where(['categoryId' => static::getCategoryId()])
+        $databaseResults = $modelCategory::find()
+            ->where(['categoryId' => static::getCategoryClass()])
             ->andFilterWhere([
                 'OR',
                 ['LIKE', 'name', $term],
@@ -73,7 +78,7 @@ class TypeController extends Controller
             ])
             ->with('parent')->all();
         foreach ($databaseResults as $databaseResult) {
-            $results[] = ['id' => $databaseResult->id, 'text' => $databaseResult->name . ' (' . $databaseResult->shortname . ')'];
+            $results[] = ['id' => $databaseResult->id, 'text' => $databaseResult->printNameAndShortname()];
         }
         return $this->asJson(['results' => $results]);
     }

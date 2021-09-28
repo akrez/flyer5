@@ -34,19 +34,19 @@ class RawEntity extends ActiveRecord
             [['entityId', 'rawId'], 'required'],
             [['entityId', 'rawId'], 'integer'],
             [['qty'], 'double', 'min' => 0],
-            [['entityId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::className(), 'targetAttribute' => ['entityId' => 'id']],
-            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::className(), 'targetAttribute' => ['rawId' => 'id']],
+            [['entityId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['entityId' => 'id']],
+            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['rawId' => 'id']],
         ];
     }
 
     public function getEntity()
     {
-        return $this->hasOne(Entity::className(), ['id' => 'entityId']);
+        return $this->hasOne(Entity::class, ['id' => 'entityId']);
     }
 
     public function getRaw()
     {
-        return $this->hasOne(Raw::className(), ['id' => 'rawId']);
+        return $this->hasOne(Raw::class, ['id' => 'rawId']);
     }
 
     public static function resellerBatchInsert($entity, $entityIds)

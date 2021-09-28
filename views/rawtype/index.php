@@ -54,7 +54,7 @@ $this->title = $newModel::modelName() . ': ' . $parentModel->name . ' (' . $pare
                             ]
                         ],
                     ];
-                    return $form->field($model, 'rawId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'rawId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',

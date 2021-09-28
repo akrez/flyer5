@@ -53,7 +53,7 @@ class Type extends ActiveRecord
             [['name', 'shortname'], 'required'],
             [['des'], 'string', 'max' => 255],
             [['shortname'], 'unique'], //
-            [['shortname'], 'unique', 'skipOnError' => true, 'targetClass' => Raw::className(), 'targetAttribute' => ['shortname' => 'shortname']],
+            [['shortname'], 'unique', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['shortname' => 'shortname']],
         ];
     }
 
@@ -64,7 +64,7 @@ class Type extends ActiveRecord
      */
     public function getEntities()
     {
-        return $this->hasMany(Entity::className(), ['typeId' => 'id']);
+        return $this->hasMany(Entity::class, ['typeId' => 'id']);
     }
 
     /**

@@ -43,7 +43,7 @@ $form = ActiveForm::begin([
     <?php } ?>
     <?php if ($model::getCategoryClass() == TypePart::getCategoryClass()) { ?>
         <div class="col-sm-3">
-            <?= $form->field($model, 'parentId')->widget(Select2::classname(), $model::getParentIdSelect2FieldConfig($model)); ?>
+            <?= $form->field($model, 'parentId')->widget(Select2::class, $model::getParentIdSelect2FieldConfig($model)); ?>
         </div>
     <?php } ?>
 </div>

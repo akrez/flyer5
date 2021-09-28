@@ -36,14 +36,14 @@ class RawType extends ActiveRecord
             [['qty'], 'number'],
             [['rawId', 'typeId'], 'integer'],
             [['des'], 'string', 'max' => 255],
-            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::className(), 'targetAttribute' => ['rawId' => 'id']],
-            [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::className(), 'targetAttribute' => ['typeId' => 'id']],
+            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['rawId' => 'id']],
+            [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['typeId' => 'id']],
         ];
     }
 
     public function getRaw()
     {
-        return $this->hasOne(Raw::className(), ['id' => 'rawId']);
+        return $this->hasOne(Raw::class, ['id' => 'rawId']);
     }
 
 }

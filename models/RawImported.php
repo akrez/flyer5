@@ -45,8 +45,8 @@ class RawImported extends ActiveRecord
             [['des'], 'string', 'max' => 255],
             [['submitAt', 'factorAt'], 'match', 'pattern' => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/'],
             [['submitAt', 'factorAt'], 'validateDate'],
-            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::className(), 'targetAttribute' => ['rawId' => 'id']],
-            [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::className(), 'targetAttribute' => ['providerId' => 'id']],
+            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['rawId' => 'id']],
+            [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['providerId' => 'id']],
         ];
     }
 
@@ -61,12 +61,12 @@ class RawImported extends ActiveRecord
 
     public function getRaw()
     {
-        return $this->hasOne(Raw::className(), ['id' => 'rawId']);
+        return $this->hasOne(Raw::class, ['id' => 'rawId']);
     }
 
     public function getProvider()
     {
-        return $this->hasOne(Hrm::className(), ['id' => 'providerId']);
+        return $this->hasOne(Hrm::class, ['id' => 'providerId']);
     }
 
     public function attributeLabels()

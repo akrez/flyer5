@@ -185,7 +185,7 @@ class TableView extends Widget
                 $column = $this->createDataColumn($column);
             } else {
                 $column = Yii::createObject(array_merge([
-                    'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::className(),
+                    'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::class,
                     'grid' => $this,
                     'format' => $this->columnFormat,
                 ], $column));
@@ -211,7 +211,7 @@ class TableView extends Widget
         }
 
         return Yii::createObject([
-            'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::className(),
+            'class' => $this->dataColumnClass ? $this->dataColumnClass : TableDataColumn::class,
             'grid' => $this,
             'attribute' => $matches[1],
             'format' => isset($matches[3]) ? $matches[3] : $this->columnFormat,

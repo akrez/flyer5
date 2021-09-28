@@ -26,7 +26,7 @@ class TypePart extends Type
     {
         return array_merge($this->defaultRules(), [
             [['parentId'], 'integer'],
-            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::className(), 'targetAttribute' => ['parentId' => 'id']],
+            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['parentId' => 'id']],
         ]);
     }
 

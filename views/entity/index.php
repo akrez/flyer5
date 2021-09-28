@@ -116,7 +116,7 @@ $this->registerJs('
                             ]
                         ],
                     ];
-                    return $form->field($model, 'typeId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'typeId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',
@@ -221,7 +221,7 @@ $this->registerJs('
                             ]
                         ],
                     ];
-                    return $form->field($model, 'providerId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'providerId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',
@@ -249,7 +249,7 @@ $this->registerJs('
                             ]
                         ],
                     ];
-                    return $form->field($model, 'sellerId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'sellerId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',

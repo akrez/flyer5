@@ -85,7 +85,7 @@ $this->registerCss('
                             ]
                         ],
                     ];
-                    return $form->field($model, 'rawId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'rawId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',
@@ -119,7 +119,7 @@ $this->registerCss('
                             ]
                         ],
                     ];
-                    return $form->field($model, 'providerId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'providerId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',
@@ -160,7 +160,7 @@ $this->registerCss('
                             ]
                         ],
                     ];
-                    return $form->field($model, 'sellerId')->widget(Select2::classname(), $config);
+                    return $form->field($model, 'sellerId')->widget(Select2::class, $config);
                 },
                 'footer' => true,
                 'format' => 'raw',

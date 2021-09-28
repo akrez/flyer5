@@ -52,9 +52,9 @@ class Entity extends ActiveRecord
             [['submitAt', 'factorAt', 'productAt'], 'string', 'max' => 19],
             [['categoryId'], 'string', 'max' => 12],
             [['id'], 'unique'],
-            [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::className(), 'targetAttribute' => ['providerId' => 'id']],
-            [['sellerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::className(), 'targetAttribute' => ['sellerId' => 'id']],
-            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::className(), 'targetAttribute' => ['parentId' => 'id']],
+            [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['providerId' => 'id']],
+            [['sellerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['sellerId' => 'id']],
+            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['parentId' => 'id']],
             //
             [['parentId'], 'compare', 'operator' => '!=', 'compareAttribute' => 'id'],
             [['submitAt', 'factorAt', 'productAt'], 'validateDate'],
@@ -67,13 +67,13 @@ class Entity extends ActiveRecord
         $rules = [];
         if ($this->categoryId == Type::CATEGORY_PART) {
             $rules = [
-                [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::className(), 'targetAttribute' => ['typeId' => 'id'], 'filter' => ['categoryId' => Type::CATEGORY_PART]],
+                [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['typeId' => 'id'], 'filter' => ['categoryId' => Type::CATEGORY_PART]],
                 [['providerId'], 'required'],
             ];
         }
         if ($this->categoryId == Type::CATEGORY_SAMANE) {
             $rules = [
-                [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::className(), 'targetAttribute' => ['typeId' => 'id'], 'filter' => ['categoryId' => Type::CATEGORY_SAMANE]],
+                [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['typeId' => 'id'], 'filter' => ['categoryId' => Type::CATEGORY_SAMANE]],
             ];
         }
         if ($this->categoryId == Type::CATEGORY_RESELLER) {
@@ -175,27 +175,27 @@ class Entity extends ActiveRecord
 
     public function getProvider()
     {
-        return $this->hasOne(Hrm::className(), ['id' => 'providerId']);
+        return $this->hasOne(Hrm::class, ['id' => 'providerId']);
     }
 
     public function getType()
     {
-        return $this->hasOne(Type::className(), ['id' => 'typeId']);
+        return $this->hasOne(Type::class, ['id' => 'typeId']);
     }
 
     public function getSeller()
     {
-        return $this->hasOne(Hrm::className(), ['id' => 'sellerId']);
+        return $this->hasOne(Hrm::class, ['id' => 'sellerId']);
     }
 
     public function getParent()
     {
-        return $this->hasOne(Entity::className(), ['id' => 'parentId']);
+        return $this->hasOne(Entity::class, ['id' => 'parentId']);
     }
 
     public function getEntities()
     {
-        return $this->hasMany(Entity::className(), ['parentId' => 'id']);
+        return $this->hasMany(Entity::class, ['parentId' => 'id']);
     }
 
     public static function resellerBatchInsert($model, $ids)

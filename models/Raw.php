@@ -31,7 +31,7 @@ class Raw extends ActiveRecord
             [['name', 'shortname', 'unit'], 'string', 'max' => 63],
             [['des'], 'string', 'max' => 255],
             [['shortname'], 'unique'],
-            [['shortname'], 'unique', 'skipOnError' => true, 'targetClass' => Type::className(), 'targetAttribute' => ['shortname' => 'shortname']],
+            [['shortname'], 'unique', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['shortname' => 'shortname']],
         ];
     }
 

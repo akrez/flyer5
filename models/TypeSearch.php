@@ -33,10 +33,10 @@ class TypeSearch extends Type
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $categoryId = null)
+    public function search($params, $instanceModel = null)
     {
-        $query = Type::find()
-            ->andFilterWhere(['categoryId' => $categoryId])
+        $query = $instanceModel::find()
+            ->andWhere(['categoryId' => $instanceModel::getCategoryClass()])
             ->with('parent');
 
         $dataProvider = new ActiveDataProvider([

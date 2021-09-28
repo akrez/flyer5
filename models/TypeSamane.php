@@ -20,23 +20,20 @@ use Yii;
  * @property RawType[] $rawTypes
  * @property TypeReseller[] $typeResellers
  */
-class TypeReseller extends Type
+class TypeSamane extends Type
 {
     public function rules()
     {
-        return array_merge($this->defaultRules(), [
-            [['unit'], 'string', 'max' => 63],
-            [['unit'], 'required'],
-        ]);
+        return $this->defaultRules();
     }
 
     public static function modelTitle($categoryId = null)
     {
-        return 'انواع ریسلر';
+        return 'انواع سامانه';
     }
 
     public static function printCategory($categoryId = null)
     {
-        return 'ريسلر';
+        return 'سامانه';
     }
 }

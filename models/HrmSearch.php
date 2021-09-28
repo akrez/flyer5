@@ -41,7 +41,7 @@ class HrmSearch extends Hrm
      */
     public function search($params)
     {
-        $query = Hrm::blogValidQuery();
+        $query = Hrm::validQuery();
 
         // add conditions that should always apply here
 

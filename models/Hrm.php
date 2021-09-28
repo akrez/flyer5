@@ -105,7 +105,7 @@ class Hrm extends ActiveRecord
         return Hrm::find()->select('fullname')->where(['role' => 2])->indexBy('id')->column();
     }
 
-    public static function blogValidQuery($id = null)
+    public static function validQuery($id = null)
     {
         $query = Hrm::find();
         $query->andFilterWhere(['id' => $id]);

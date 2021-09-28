@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /**
  * This is the model class for table "type".
@@ -22,6 +25,11 @@ use Yii;
  */
 class Type extends ActiveRecord
 {
+    const CATEGORY_FARVAND = 'FARVAND';
+    const CATEGORY_PART = 'PART';
+    const CATEGORY_SAMANE = 'SAMANE';
+    const CATEGORY_RESELLER = 'RESELLER';
+
     /**
      * {@inheritdoc}
      */
@@ -35,12 +43,15 @@ class Type extends ActiveRecord
      */
     public function rules()
     {
+        return $this->defaultRules();
+    }
+
+    public function defaultRules()
+    {
         return [
             [['name', 'shortname'], 'string', 'max' => 63],
             [['name', 'shortname'], 'required'],
             [['des'], 'string', 'max' => 255],
-            [['categoryId'], 'required'],
-            [['categoryId'], 'string', 'max' => 12],
             [['shortname'], 'unique'], //
             [['shortname'], 'unique', 'skipOnError' => true, 'targetClass' => Raw::className(), 'targetAttribute' => ['shortname' => 'shortname']],
         ];
@@ -91,8 +102,60 @@ class Type extends ActiveRecord
         return 'موجودیت‌ها';
     }
 
+    public static function getCategoryClass()
+    {
+        return static::class;
+    }
+
+    public static function modelName()
+    {
+        return static::modelTitle();
+    }
+
     public static function printCategory($categoryId = null)
     {
         return '';
+    }
+
+    public function printNameAndShortname()
+    {
+        return $this->name . ' (' . $this->shortname . ')';
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'typeId' => static::printCategory(),
+        ] + parent::attributeLabels();
+    }
+
+    public static function validQuery($id = null)
+    {
+        $query = static::find();
+        $query->andFilterWhere(['id' => $id]);
+        return $query;
+    }
+
+    public static function getParentIdSelect2FieldConfig($model)
+    {
+        return [
+            'model' => $model,
+            'attribute' => 'parentId',
+            'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->name] : []),
+            'options' => [
+                'id' => Html::getInputId($model, 'parentId') . '-' . $model->id,
+                'dir' => 'rtl',
+            ],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'ajax' => [
+                    'url' => Url::toRoute(['typefarvand/suggest']),
+                    'dataType' => 'json',
+                    'delay' => 250,
+                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
+                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                ]
+            ],
+        ];
     }
 }

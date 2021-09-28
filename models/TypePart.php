@@ -20,23 +20,30 @@ use Yii;
  * @property RawType[] $rawTypes
  * @property TypeReseller[] $typeResellers
  */
-class TypeReseller extends Type
+class TypePart extends Type
 {
     public function rules()
     {
         return array_merge($this->defaultRules(), [
-            [['unit'], 'string', 'max' => 63],
-            [['unit'], 'required'],
+            [['parentId'], 'integer'],
+            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::className(), 'targetAttribute' => ['parentId' => 'id']],
         ]);
     }
 
     public static function modelTitle($categoryId = null)
     {
-        return 'انواع ریسلر';
+        return 'انواع قطعات';
     }
 
     public static function printCategory($categoryId = null)
     {
-        return 'ريسلر';
+        return 'قطعه';
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'parentId' => 'فروند مرتبط'
+        ] + parent::attributeLabels();
     }
 }

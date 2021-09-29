@@ -1,6 +1,7 @@
 <?php
 
 use app\models\TypePart;
+use app\models\TypeRaw;
 use app\models\TypeReseller;
 use kartik\select2\Select2;
 use yii\helpers\Url;
@@ -36,7 +37,7 @@ $form = ActiveForm::begin([
     <div class="col-sm-3">
         <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
     </div>
-    <?php if ($model::getCategoryClass() == TypeReseller::getCategoryClass()) { ?>
+    <?php if (in_array($model::getCategoryClass(), [TypeReseller::getCategoryClass(), TypeRaw::getCategoryClass()])) { ?>
         <div class="col-sm-3">
             <?= $form->field($model, 'unit')->textInput(['maxlength' => true]) ?>
         </div>

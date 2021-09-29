@@ -1,6 +1,6 @@
 <?php
 
-use app\models\Hrm;
+use app\models\TypeRaw;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -116,7 +116,10 @@ $('#table').yiiGridView(" . json_encode([
 ");
 
 $attributes = ['name', 'shortname'];
-if ($newModel::getCategoryClass() == TypeReseller::getCategoryClass()) {
+if (in_array($newModel::getCategoryClass(), [
+    TypeReseller::getCategoryClass(),
+    TypeRaw::getCategoryClass(),
+])) {
     $attributes[] = 'unit';
 }
 if ($newModel::getCategoryClass() == TypePart::getCategoryClass()) {

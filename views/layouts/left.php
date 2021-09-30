@@ -4,6 +4,11 @@ use app\models\Entity;
 use app\models\Type;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use app\models\TypeRaw;
+use app\models\TypePart;
+use app\models\TypeSamane;
+use app\models\TypeFarvand;
+use app\models\TypeReseller;
 
 $this->registerCss('
     .sidebar-mini.sidebar-collapse .user-panel {
@@ -41,11 +46,11 @@ $this->registerCss('
                 <li class="treeview">
                     <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
-                        <li><a href="<?= Url::toRoute(['/typeraw/index']) ?>">انواع مواد اولیه</a></li>
-                        <li><a href="<?= Url::toRoute(['/typereseller/index']) ?>">انواع ریسلر</a></li>
-                        <li><a href="<?= Url::toRoute(['/typefarvand/index']) ?>">انواع فروند</a></li>
-                        <li><a href="<?= Url::toRoute(['/typepart/index']) ?>">انواع قطعات</a></li>
-                        <li><a href="<?= Url::toRoute(['/typesamane/index']) ?>">انواع سامانه</a></li>
+                        <li><a href="<?= Url::toRoute(['/type/index-raw']) ?>"><?= TypeRaw::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/type/index-samane']) ?>"><?= TypeSamane::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/type/index-part']) ?>"><?= TypePart::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/type/index-reseller']) ?>"><?= TypeReseller::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/type/index-farvand']) ?>"><?= TypeFarvand::modelTitle() ?></a></li>
                     </ul>
                 </li>
 

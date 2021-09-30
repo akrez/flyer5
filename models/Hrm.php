@@ -120,21 +120,45 @@ class Hrm extends ActiveRecord
         return $this->fullname . ' (' . $this->code . ')';
     }
 
-    public static function getSelect2FieldConfig($model, $foreignModel = 'provider', $attribute = 'providerId', $role = [])
+    public static function getSelect2FieldConfigProvider($model)
     {
         return [
             'model' => $model,
-            'attribute' => $attribute,
-            'data' => ($model->$attribute && $model->$foreignModel ? [$model->$foreignModel->id => $model->$foreignModel->printFullnameAndCode()] : []),
+            'attribute' => 'providerId',
+            'data' => ($model->providerId && $model->provider ? [$model->provider->id => $model->provider->printFullnameAndCode()] : []),
             'options' => [
-                'placeholder' => $model->getAttributeLabel($attribute),
-                'id' => Html::getInputId($model, $attribute) . '-' . $model->id,
+                'placeholder' => $model->getAttributeLabel('providerId'),
+                'id' => Html::getInputId($model, 'providerId') . '-' . $model->id,
                 'dir' => 'rtl',
             ],
             'pluginOptions' => [
                 'allowClear' => true,
                 'ajax' => [
-                    'url' => Url::toRoute(['hrm/suggest', 'role' => $role]),
+                    'url' => Url::toRoute(['hrm/suggest']),
+                    'dataType' => 'json',
+                    'delay' => 250,
+                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
+                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                ]
+            ],
+        ];
+    }
+
+    public static function getSelect2FieldConfigSeller($model)
+    {
+        return [
+            'model' => $model,
+            'attribute' => 'sellerId',
+            'data' => ($model->sellerId && $model->seller ? [$model->seller->id => $model->seller->printFullnameAndCode()] : []),
+            'options' => [
+                'placeholder' => $model->getAttributeLabel('sellerId'),
+                'id' => Html::getInputId($model, 'sellerId') . '-' . $model->id,
+                'dir' => 'rtl',
+            ],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'ajax' => [
+                    'url' => Url::toRoute(['hrm/suggest', 'role' => 2]),
                     'dataType' => 'json',
                     'delay' => 250,
                     'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),

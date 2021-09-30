@@ -147,11 +147,11 @@ $colspan = 11;
                         echo '<th>' . Html::activeInput('price', $searchModel, 'price', ['class' => 'form-control']) . '</th>';
                         echo '<th>' . Html::activeInput('factor', $searchModel, 'factor', ['class' => 'form-control']) . '</th>';
                         echo '<th>' . Html::activeInput('qty', $searchModel, 'qty', ['class' => 'form-control']) . '</th>';
-                        echo '<th>' . Select2::widget(Hrm::getSelect2FieldConfig($searchModel, 'seller', 'sellerId', 2)) . '</th>';
+                        echo '<th>' . Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)) . '</th>';
                         echo '<th>' . Html::activeInput('submitAt', $searchModel, 'submitAt', ['class' => 'form-control rawimportedSubmitatDatepicker']) . '</th>';
                         echo '<th>' . Html::activeInput('factorAt', $searchModel, 'factorAt', ['class' => 'form-control rawimportedFactoratDatepicker']) . '</th>';
                         echo '<th>' . Html::activeInput('des', $searchModel, 'des', ['class' => 'form-control']) . '</th>';
-                        echo '<th>' . Select2::widget(Hrm::getSelect2FieldConfig($searchModel, 'provider', 'providerId')) . '</th>';
+                        echo '<th>' . Select2::widget(Hrm::getSelect2FieldConfigProvider($searchModel)) . '</th>';
                         echo '<th>' . Select2::widget(TypeRaw::getSelect2FieldConfigRaw($searchModel)) . '</th>';
                         ?>
                         <th></th>

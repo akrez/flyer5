@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Hrm;
+use app\models\Type;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use kartik\select2\Select2;
@@ -36,15 +37,15 @@ $form = ActiveForm::begin([
         <?= $form->field($model, 'qty')->textInput(['maxlength' => true]) ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'providerId')->widget(Select2::class, Hrm::getSelect2FieldConfig($model)); ?>
+        <?= $form->field($model, 'providerId')->widget(Select2::class, Hrm::getSelect2FieldConfigProvider($model)); ?>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-3">
-        <?= $form->field($model, 'rawId')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'rawId')->widget(Select2::class, Type::getSelect2FieldConfigRaw($model)); ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'sellerId')->widget(Select2::class, Hrm::getSelect2FieldConfig($model, 'seller', 'sellerId', 2)); ?>
+        <?= $form->field($model, 'sellerId')->widget(Select2::class, Hrm::getSelect2FieldConfigSeller($model)); ?>
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'submitAt')->textInput(['maxlength' => true, 'class' => 'form-control rawimportedSubmitatDatepicker']) ?>

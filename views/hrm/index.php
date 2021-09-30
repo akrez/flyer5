@@ -15,32 +15,6 @@ use app\assets\DatepickerAsset;
 $this->title = $newModel::modelName();
 MaskedInputAsset::register($this);
 DatepickerAsset::register($this);
-$this->registerJs('
-    jQuery(".nationalCodeInputmask").inputmask({"mask":"999-999999-9"});
-    jQuery(".mobileInputmask").inputmask({"mask":"9999-9999999"});
-    $(".hrmBirthdateDatepicker").persianDatepicker({
-        calendar: {
-            persian: {
-                showHint: true,
-                locale: "fa"
-            },
-            gregorian: {
-                showHint: true
-            }
-        },
-        "toolbox": {
-            "calendarSwitch": {
-                "enabled": false,
-            }
-        },
-        initialValue: false,
-        initialValueType: "persian",
-        autoClose: true,
-        observer: true,
-        format: "YYYY-MM-DD"
-    });
-', View::POS_END);
-
 GridViewAsset::register($this);
 
 $sort = $dataProvider->sort;
@@ -111,6 +85,29 @@ $('#table').yiiGridView(" . json_encode([
     'filterSelector' => '#table-filters input, #table-filters select',
     'filterOnFocusOut' => true,
 ]) . ");
+jQuery('.nationalCodeInputmask').inputmask({'mask':'999-999999-9'});
+jQuery('.mobileInputmask').inputmask({'mask':'9999-9999999'});
+$('.hrmBirthdateDatepicker').persianDatepicker({
+    calendar: {
+        persian: {
+            showHint: true,
+            locale: 'fa'
+        },
+        gregorian: {
+            showHint: true
+        }
+    },
+    'toolbox': {
+        'calendarSwitch': {
+            'enabled': false,
+        }
+    },
+    initialValue: false,
+    initialValueType: 'persian',
+    autoClose: true,
+    observer: true,
+    format: 'YYYY-MM-DD'
+});
 ");
 ?>
 <div class="row">

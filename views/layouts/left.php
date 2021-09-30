@@ -39,21 +39,21 @@ $this->registerCss('
                 <li><a href="<?= Url::toRoute(['/hrm/index']) ?>"><i class="glyphicon glyphicon-user"></i><span>منابع انسانی</span></a></li>
 
                 <li class="treeview">
-                    <a href="#"><i class="glyphicon glyphicon-oil"></i><span>مواد خام</span></a>
-                    <ul class="treeview-menu" style="right: 49px;">
-                        <li><a href="<?= Url::toRoute(['/rawimported/index']) ?>">مواد اولیه وارد شده</a></li>
-                    </ul>
-                </li>
-
-                <li class="treeview">
                     <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
-                        <li><a href="<?= Url::toRoute(['/typeraw/index']) ?>">انواع مواد خام</a></li>
+                        <li><a href="<?= Url::toRoute(['/typeraw/index']) ?>">انواع مواد اولیه</a></li>
                         <li><a href="<?= Url::toRoute(['/typereseller/index']) ?>">انواع ریسلر</a></li>
                         <li><a href="<?= Url::toRoute(['/typefarvand/index']) ?>">انواع فروند</a></li>
                         <li><a href="<?= Url::toRoute(['/typepart/index']) ?>">انواع قطعات</a></li>
                         <li><a href="<?= Url::toRoute(['/typesamane/index']) ?>">انواع سامانه</a></li>
                     </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="<?= Url::toRoute(['/rawimported/index']) ?>">
+                        <i class="glyphicon glyphicon-oil"></i>
+                        مواد اولیه وارد شده
+                    </a>
                 </li>
 
                 <li class="treeview">

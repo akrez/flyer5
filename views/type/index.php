@@ -182,7 +182,7 @@ $colspan = count($attributes) + 1;
                             echo '<th>' . Html::activeInput('des', $searchModel, 'des', ['class' => 'form-control']) . '</th>';
                         }
                         if (in_array('parentId', $attributes)) {
-                            echo '<th>' . Select2::widget($searchModel::getParentIdSelect2FieldConfig($searchModel)) . '</th>';
+                            echo '<th>' . Select2::widget($searchModel::getSelect2FieldConfigParent($searchModel)) . '</th>';
                         }
                         ?>
                         <th></th>

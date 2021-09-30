@@ -1,11 +1,9 @@
 <?php
 
-use app\models\TypePart;
-use app\models\TypeRaw;
-use app\models\TypeReseller;
-use kartik\select2\Select2;
+use app\models\Hrm;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use kartik\select2\Select2;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -29,24 +27,37 @@ $form = ActiveForm::begin([
 
 <div class="row">
     <div class="col-sm-3">
-        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'shortname')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'factor')->textInput(['maxlength' => true]) ?>
     </div>
     <div class="col-sm-3">
+        <?= $form->field($model, 'qty')->textInput(['maxlength' => true]) ?>
+    </div>
+    <div class="col-sm-3">
+        <?= $form->field($model, 'providerId')->widget(Select2::class, Hrm::getSelect2FieldConfig($model)); ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3">
+        <?= $form->field($model, 'rawId')->textInput(['maxlength' => true]) ?>
+    </div>
+    <div class="col-sm-3">
+        <?= $form->field($model, 'sellerId')->widget(Select2::class, Hrm::getSelect2FieldConfig($model, 'seller', 'sellerId', 2)); ?>
+    </div>
+    <div class="col-sm-3">
+        <?= $form->field($model, 'submitAt')->textInput(['maxlength' => true, 'class' => 'form-control rawimportedSubmitatDatepicker']) ?>
+    </div>
+    <div class="col-sm-3">
+        <?= $form->field($model, 'factorAt')->textInput(['maxlength' => true, 'class' => 'form-control rawimportedFactoratDatepicker']) ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
         <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
     </div>
-    <?php if (in_array($model::getCategoryClass(), [TypeReseller::getCategoryClass(), TypeRaw::getCategoryClass()])) { ?>
-        <div class="col-sm-3">
-            <?= $form->field($model, 'unit')->textInput(['maxlength' => true]) ?>
-        </div>
-    <?php } ?>
-    <?php if ($model::getCategoryClass() == TypePart::getCategoryClass()) { ?>
-        <div class="col-sm-3">
-            <?= $form->field($model, 'parentId')->widget(Select2::class, $model::getSelect2FieldConfigParent($model)); ?>
-        </div>
-    <?php } ?>
 </div>
 
 <div class="row">

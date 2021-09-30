@@ -3,7 +3,8 @@
 namespace app\models;
 
 use app\components\Helper;
-use Yii;
+use app\models\Hrm;
+use app\models\Type;
 
 /**
  * This is the model class for table "raw_imported".
@@ -12,14 +13,14 @@ use Yii;
  * @property int $price
  * @property string $factor
  * @property int $qty
- * @property int $sellerId
- * @property string $submitAt
- * @property string $factorAt
- * @property string $des
+ * @property int|null $sellerId
+ * @property string|null $submitAt
+ * @property string|null $factorAt
+ * @property string|null $des
  * @property int $providerId
  * @property int $rawId
  *
- * @property Raw $raw
+ * @property Type $raw
  * @property Hrm $provider
  */
 class RawImported extends ActiveRecord
@@ -45,7 +46,7 @@ class RawImported extends ActiveRecord
             [['des'], 'string', 'max' => 255],
             [['submitAt', 'factorAt'], 'match', 'pattern' => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/'],
             [['submitAt', 'factorAt'], 'validateDate'],
-            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['rawId' => 'id']],
+            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['rawId' => 'id'], 'filter' => ['categoryId' => TypeRaw::class]],
             [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['providerId' => 'id']],
         ];
     }
@@ -53,20 +54,39 @@ class RawImported extends ActiveRecord
     public function validateDate($attribute, $params)
     {
         if ($this->$attribute = Helper::formatDate($this->$attribute)) {
-            
         } else {
             $this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', ['attribute' => $this->getAttributeLabel($attribute)]));
         }
     }
 
-    public function getRaw()
-    {
-        return $this->hasOne(Raw::class, ['id' => 'rawId']);
-    }
-
+    /**
+     * Gets query for [[Provider]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getProvider()
     {
         return $this->hasOne(Hrm::class, ['id' => 'providerId']);
+    }
+
+    /**
+     * Gets query for [[Raw]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRaw()
+    {
+        return $this->hasOne(Type::class, ['id' => 'rawId']);
+    }
+
+    /**
+     * Gets query for [[Seller]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSeller()
+    {
+        return $this->hasOne(Hrm::class, ['id' => 'sellerId']);
     }
 
     public function attributeLabels()
@@ -74,4 +94,10 @@ class RawImported extends ActiveRecord
         return ['providerId' => 'وارد کننده'] + parent::attributeLabels();
     }
 
+    public static function validQuery($id = null)
+    {
+        $query = static::find();
+        $query->andFilterWhere(['id' => $id]);
+        return $query;
+    }
 }

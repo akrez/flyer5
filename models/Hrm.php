@@ -120,21 +120,21 @@ class Hrm extends ActiveRecord
         return $this->fullname . ' (' . $this->code . ')';
     }
 
-    public static function getSelect2FieldConfig($model)
+    public static function getSelect2FieldConfig($model, $foreignModel = 'provider', $attribute = 'providerId', $role = [])
     {
         return [
             'model' => $model,
-            'attribute' => 'providerId',
-            'data' => ($model->providerId && $model->provider ? [$model->provider->id => $model->provider->printFullnameAndCode()] : []),
+            'attribute' => $attribute,
+            'data' => ($model->$attribute && $model->$foreignModel ? [$model->$foreignModel->id => $model->$foreignModel->printFullnameAndCode()] : []),
             'options' => [
-                'placeholder' => $model->getAttributeLabel('providerId'),
-                'id' => Html::getInputId($model, 'providerId') . '-' . $model->id,
+                'placeholder' => $model->getAttributeLabel($attribute),
+                'id' => Html::getInputId($model, $attribute) . '-' . $model->id,
                 'dir' => 'rtl',
             ],
             'pluginOptions' => [
                 'allowClear' => true,
                 'ajax' => [
-                    'url' => Url::toRoute(['hrm/suggest']),
+                    'url' => Url::toRoute(['hrm/suggest', 'role' => $role]),
                     'dataType' => 'json',
                     'delay' => 250,
                     'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),

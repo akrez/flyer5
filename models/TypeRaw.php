@@ -32,11 +32,11 @@ class TypeRaw extends Type
 
     public static function modelTitle($categoryId = null)
     {
-        return 'انواع مواد خام';
+        return 'انواع مواد اولیه';
     }
 
     public static function printCategory($categoryId = null)
     {
-        return 'مواد خام';
+        return 'مواد اولیه';
     }
 }

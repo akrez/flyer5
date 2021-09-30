@@ -147,6 +147,7 @@ class Type extends ActiveRecord
             'attribute' => 'parentId',
             'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->printNameAndShortname()] : []),
             'options' => [
+                'placeholder' => '',
                 'id' => Html::getInputId($model, 'parentId') . '-' . $model->id,
                 'dir' => 'rtl',
             ],
@@ -168,16 +169,16 @@ class Type extends ActiveRecord
         return [
             'model' => $model,
             'attribute' => 'rawId',
-            'data' => ($model->rawId && $model->raw ? [$model->raw->id => $model->raw->name . ' (' . $model->raw->unit . ')'] : []),
+            'data' => ($model->rawId && $model->raw ? [$model->raw->id => $model->raw->printNameAndUnit()] : []),
             'options' => [
-                'placeholder' => $model->getAttributeLabel('rawId'),
+                'placeholder' => '',
                 'id' => Html::getInputId($model, 'rawId') . '-' . $model->id,
                 'dir' => 'rtl',
             ],
             'pluginOptions' => [
                 'allowClear' => true,
                 'ajax' => [
-                    'url' => Url::toRoute(['raw/suggest']),
+                    'url' => Url::toRoute(['typeraw/suggest']),
                     'dataType' => 'json',
                     'delay' => 250,
                     'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),

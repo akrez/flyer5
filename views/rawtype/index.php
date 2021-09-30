@@ -141,6 +141,11 @@ $colspan = 6;
                                     <?= Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . ($displayState == 'update' ? ' btn-warning ' : ' btn-default '), 'toggle' => "#row-update-" . $dataProviderModel->id]) ?>
                                 </td>
                                 <td>
+                                    <?= Html::a(' <span class="glyphicon glyphicon-trash"></span> ' . Yii::t('app', 'Remove'), Url::current(['rawtype/index', 'id' => $dataProviderModel->id, 'typeId' => $dataProviderModel->typeId, 'state' => 'remove']), [
+                                        'data-pjax'=>1,
+                                        'class' => 'btn btn-danger btn-block btn-social',
+                                        'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                                    ]) ?>
                                 </td>
                             </tr>
                             <?php

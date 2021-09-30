@@ -54,10 +54,12 @@ $this->registerCss('
                     </ul>
                 </li>
 
-                <li class="treeview">
+                <li>
                     <a href="<?= Url::toRoute(['/rawimported/index']) ?>">
                         <i class="glyphicon glyphicon-oil"></i>
-                        مواد اولیه وارد شده
+                        <span class="pull-right-container">
+                            مواد اولیه وارد شده
+                        </span>
                     </a>
                 </li>
 

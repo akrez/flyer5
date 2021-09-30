@@ -162,4 +162,28 @@ class Type extends ActiveRecord
             ],
         ];
     }
+
+    public static function getSelect2FieldConfigRaw($model)
+    {
+        return [
+            'model' => $model,
+            'attribute' => 'rawId',
+            'data' => ($model->rawId && $model->raw ? [$model->raw->id => $model->raw->name . ' (' . $model->raw->unit . ')'] : []),
+            'options' => [
+                'placeholder' => $model->getAttributeLabel('rawId'),
+                'id' => Html::getInputId($model, 'rawId') . '-' . $model->id,
+                'dir' => 'rtl',
+            ],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'ajax' => [
+                    'url' => Url::toRoute(['raw/suggest']),
+                    'dataType' => 'json',
+                    'delay' => 250,
+                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
+                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                ]
+            ],
+        ];
+    }
 }

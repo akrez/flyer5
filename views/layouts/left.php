@@ -44,23 +44,21 @@ $this->registerCss('
                 <li><a href="<?= Url::toRoute(['/hrm/index']) ?>"><i class="glyphicon glyphicon-user"></i><span>منابع انسانی</span></a></li>
 
                 <li class="treeview">
-                    <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>
+                    <a href="#"><i class="glyphicon glyphicon-oil"></i><span>مواد خام</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
                         <li><a href="<?= Url::toRoute(['/type/index-raw']) ?>"><?= TypeRaw::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/rawimported/index']) ?>">مواد اولیه وارد شده</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>
+                    <ul class="treeview-menu" style="right: 49px;">
                         <li><a href="<?= Url::toRoute(['/type/index-samane']) ?>"><?= TypeSamane::modelTitle() ?></a></li>
                         <li><a href="<?= Url::toRoute(['/type/index-part']) ?>"><?= TypePart::modelTitle() ?></a></li>
                         <li><a href="<?= Url::toRoute(['/type/index-reseller']) ?>"><?= TypeReseller::modelTitle() ?></a></li>
                         <li><a href="<?= Url::toRoute(['/type/index-farvand']) ?>"><?= TypeFarvand::modelTitle() ?></a></li>
                     </ul>
-                </li>
-
-                <li>
-                    <a href="<?= Url::toRoute(['/rawimported/index']) ?>">
-                        <i class="glyphicon glyphicon-oil"></i>
-                        <span class="pull-right-container">
-                            مواد اولیه وارد شده
-                        </span>
-                    </a>
                 </li>
 
                 <li class="treeview">

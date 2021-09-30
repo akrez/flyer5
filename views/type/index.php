@@ -11,6 +11,7 @@ use yii\widgets\LinkPager;
 use yii\grid\GridViewAsset;
 use yii\helpers\HtmlPurifier;
 use app\assets\DatepickerAsset;
+use app\models\RawType;
 use app\models\TypePart;
 use app\models\TypeReseller;
 use kartik\select2\Select2;
@@ -128,6 +129,12 @@ if ($newModel::getCategoryClass() == TypePart::getCategoryClass()) {
 $attributes[] = 'des';
 
 $colspan = count($attributes) + 1;
+
+$rawtype = false;
+if ($newModel::getCategoryClass() != TypeRaw::getCategoryClass()) {
+    $rawtype = true;
+    $colspan++;
+}
 ?>
 <div class="row">
     <div class="col-sm-12">
@@ -161,8 +168,11 @@ $colspan = count($attributes) + 1;
                         if (in_array('des', $attributes)) {
                             echo '<th>' . $sort->link('des', ['label' => $newModel->getAttributeLabel('des')]) . '</th>';
                         }
+                        echo '<th></th>';
+                        if ($rawtype) {
+                            echo '<th></th>';
+                        }
                         ?>
-                        <th></th>
                     </tr>
                     <tr id="table-filters" class="info">
                         <?php
@@ -184,8 +194,11 @@ $colspan = count($attributes) + 1;
                         if (in_array('des', $attributes)) {
                             echo '<th>' . Html::activeInput('des', $searchModel, 'des', ['class' => 'form-control']) . '</th>';
                         }
+                        echo '<th></th>';
+                        if ($rawtype) {
+                            echo '<th></th>';
+                        }
                         ?>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -222,6 +235,11 @@ $colspan = count($attributes) + 1;
                                 <td>
                                     <?= Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . ($displayState == 'update' ? ' btn-warning ' : ' btn-default '), 'toggle' => "#row-update-" . $dataProviderModel->id]) ?>
                                 </td>
+                                <?php
+                                if ($rawtype) {
+                                    echo '<td>' . Html::a('<span class="glyphicon glyphicon-list-alt"></span>' . RawType::modelName(), Url::to(['rawtype/index', 'typeId' => $dataProviderModel->id]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => 0]) . '</td>';
+                                }
+                                ?>
                             </tr>
                             <?php
                             $displayStyle = 'display: none;';

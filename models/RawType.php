@@ -8,12 +8,12 @@ use Yii;
  * This is the model class for table "raw_type".
  *
  * @property int $id
- * @property double $qty
- * @property string $des
+ * @property float $qty
+ * @property string|null $des
  * @property int $rawId
  * @property int $typeId
  *
- * @property Raw $raw
+ * @property Type $raw
  * @property Type $type
  */
 class RawType extends ActiveRecord
@@ -36,14 +36,28 @@ class RawType extends ActiveRecord
             [['qty'], 'number'],
             [['rawId', 'typeId'], 'integer'],
             [['des'], 'string', 'max' => 255],
-            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['rawId' => 'id']],
+            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['rawId' => 'id']],
             [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['typeId' => 'id']],
         ];
     }
 
+    /**
+     * Gets query for [[Raw]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getRaw()
     {
-        return $this->hasOne(Raw::class, ['id' => 'rawId']);
+        return $this->hasOne(Type::class, ['id' => 'rawId']);
     }
 
+    /**
+     * Gets query for [[Type]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getType()
+    {
+        return $this->hasOne(Type::class, ['id' => 'typeId']);
+    }
 }

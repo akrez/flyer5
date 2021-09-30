@@ -154,7 +154,7 @@ class Type extends ActiveRecord
             'pluginOptions' => [
                 'allowClear' => true,
                 'ajax' => [
-                    'url' => Url::toRoute(['typefarvand/suggest']),
+                    'url' => Url::toRoute(['type/suggest-farvand']),
                     'dataType' => 'json',
                     'delay' => 250,
                     'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
@@ -178,7 +178,7 @@ class Type extends ActiveRecord
             'pluginOptions' => [
                 'allowClear' => true,
                 'ajax' => [
-                    'url' => Url::toRoute(['typeraw/suggest']),
+                    'url' => Url::toRoute(['type/suggest-raw']),
                     'dataType' => 'json',
                     'delay' => 250,
                     'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),

@@ -34,9 +34,6 @@ $form = ActiveForm::begin([
     <div class="col-sm-3">
         <?= $form->field($model, 'shortname')->textInput(['maxlength' => true]) ?>
     </div>
-    <div class="col-sm-3">
-        <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
-    </div>
     <?php if (in_array($model::getCategoryClass(), [TypeReseller::getCategoryClass(), TypeRaw::getCategoryClass()])) { ?>
         <div class="col-sm-3">
             <?= $form->field($model, 'unit')->textInput(['maxlength' => true]) ?>
@@ -47,6 +44,9 @@ $form = ActiveForm::begin([
             <?= $form->field($model, 'parentId')->widget(Select2::class, $model::getSelect2FieldConfigParent($model)); ?>
         </div>
     <?php } ?>
+    <div class="col-sm-3">
+        <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
+    </div>
 </div>
 
 <div class="row">

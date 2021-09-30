@@ -155,11 +155,11 @@ $colspan = count($attributes) + 1;
                         if (in_array('unit', $attributes)) {
                             echo '<th>' . $sort->link('unit', ['label' => $newModel->getAttributeLabel('unit')]) . '</th>';
                         }
-                        if (in_array('des', $attributes)) {
-                            echo '<th>' . $sort->link('des', ['label' => $newModel->getAttributeLabel('des')]) . '</th>';
-                        }
                         if (in_array('parentId', $attributes)) {
                             echo '<th>' . $sort->link('parentId', ['label' => $newModel->getAttributeLabel('parentId')]) . '</th>';
+                        }
+                        if (in_array('des', $attributes)) {
+                            echo '<th>' . $sort->link('des', ['label' => $newModel->getAttributeLabel('des')]) . '</th>';
                         }
                         ?>
                         <th></th>
@@ -178,11 +178,11 @@ $colspan = count($attributes) + 1;
                         if (in_array('unit', $attributes)) {
                             echo '<th>' . Html::activeInput('unit', $searchModel, 'unit', ['class' => 'form-control']) . '</th>';
                         }
-                        if (in_array('des', $attributes)) {
-                            echo '<th>' . Html::activeInput('des', $searchModel, 'des', ['class' => 'form-control']) . '</th>';
-                        }
                         if (in_array('parentId', $attributes)) {
                             echo '<th>' . Select2::widget($searchModel::getSelect2FieldConfigParent($searchModel)) . '</th>';
+                        }
+                        if (in_array('des', $attributes)) {
+                            echo '<th>' . Html::activeInput('des', $searchModel, 'des', ['class' => 'form-control']) . '</th>';
                         }
                         ?>
                         <th></th>
@@ -212,11 +212,11 @@ $colspan = count($attributes) + 1;
                                 if (in_array('unit', $attributes)) {
                                     echo '<td>' . HtmlPurifier::process($dataProviderModel->unit) . '</td>';
                                 }
-                                if (in_array('des', $attributes)) {
-                                    echo '<td>' . HtmlPurifier::process($dataProviderModel->des) . '</td>';
-                                }
                                 if (in_array('parentId', $attributes)) {
                                     echo '<td>' . HtmlPurifier::process($dataProviderModel->parent->printNameAndShortname()) . '</td>';
+                                }
+                                if (in_array('des', $attributes)) {
+                                    echo '<td>' . HtmlPurifier::process($dataProviderModel->des) . '</td>';
                                 }
                                 ?>
                                 <td>

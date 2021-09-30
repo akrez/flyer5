@@ -140,6 +140,8 @@ $colspan = 6;
                                 <td>
                                     <?= Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . ($displayState == 'update' ? ' btn-warning ' : ' btn-default '), 'toggle' => "#row-update-" . $dataProviderModel->id]) ?>
                                 </td>
+                                <td>
+                                </td>
                             </tr>
                             <?php
                             $displayStyle = 'display: none;';
@@ -179,3 +181,4 @@ echo LinkPager::widget([
     ]
 ]);
 ?>
+<?php Pjax::end(); ?>

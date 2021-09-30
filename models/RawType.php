@@ -60,4 +60,12 @@ class RawType extends ActiveRecord
     {
         return $this->hasOne(Type::class, ['id' => 'typeId']);
     }
+
+    public static function validQuery($typeId, $id = null)
+    {
+        $query = static::find();
+        $query->andWhere(['typeId' => $typeId]);
+        $query->andFilterWhere(['id' => $id]);
+        return $query;
+    }
 }

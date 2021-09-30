@@ -39,9 +39,9 @@ class RawTypeSearch extends RawType
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $newModel, $parentModel)
+    public function search($params, $parentModel)
     {
-        $query = RawType::find()->where(['typeId' => $parentModel->id])->with('raw');
+        $query = RawType::validQuery($parentModel->id)->with('raw');
 
         // add conditions that should always apply here
 
@@ -71,5 +71,4 @@ class RawTypeSearch extends RawType
 
         return $dataProvider;
     }
-
 }

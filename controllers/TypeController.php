@@ -122,7 +122,7 @@ class TypeController extends Controller
         }
         //
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $categoryClass);
-        return $this->render('..\type\index', [
+        return $this->render('index', [
             'state' => $state,
         ] + compact('newModel', 'searchModel', 'model', 'dataProvider'));
     }

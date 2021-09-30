@@ -115,14 +115,20 @@ class Hrm extends ActiveRecord
         return $query;
     }
 
+    public function printFullnameAndCode()
+    {
+        return $this->fullname . ' (' . $this->code . ')';
+    }
+
     public static function getSelect2FieldConfig($model)
     {
         return [
             'model' => $model,
-            'attribute' => 'parentId',
-            'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->name] : []),
+            'attribute' => 'providerId',
+            'data' => ($model->providerId && $model->provider ? [$model->provider->id => $model->provider->printFullnameAndCode()] : []),
             'options' => [
-                'id' => Html::getInputId($model, 'parentId') . '-' . $model->id,
+                'placeholder' => $model->getAttributeLabel('providerId'),
+                'id' => Html::getInputId($model, 'providerId') . '-' . $model->id,
                 'dir' => 'rtl',
             ],
             'pluginOptions' => [

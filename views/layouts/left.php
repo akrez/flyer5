@@ -39,36 +39,36 @@ $this->registerCss('
                 <li><a href="<?= Url::toRoute(['/hrm/index']) ?>"><i class="glyphicon glyphicon-user"></i><span>منابع انسانی</span></a></li>
 
                 <li class="treeview">
-                    <a href="#"><i class="glyphicon glyphicon-oil"></i><span>مواد خام</span></a>        
+                    <a href="#"><i class="glyphicon glyphicon-oil"></i><span>مواد خام</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
-                        <li><a href="<?= Url::toRoute(['/raw/index']) ?>">انواع مواد خام</a></li>
                         <li><a href="<?= Url::toRoute(['/rawimported/index']) ?>">مواد اولیه وارد شده</a></li>
-                    </ul>    
+                    </ul>
                 </li>
 
                 <li class="treeview">
-                    <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>        
+                    <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
+                        <li><a href="<?= Url::toRoute(['/typeraw/index']) ?>">انواع مواد خام</a></li>
                         <li><a href="<?= Url::toRoute(['/typereseller/index']) ?>">انواع ریسلر</a></li>
                         <li><a href="<?= Url::toRoute(['/typefarvand/index']) ?>">انواع فروند</a></li>
                         <li><a href="<?= Url::toRoute(['/typepart/index']) ?>">انواع قطعات</a></li>
                         <li><a href="<?= Url::toRoute(['/typesamane/index']) ?>">انواع سامانه</a></li>
-                    </ul>    
+                    </ul>
                 </li>
 
                 <li class="treeview">
-                    <a href="#"><i class="glyphicon glyphicon-list"></i><span><?= Entity::modelTitle() ?></span></a>        
+                    <a href="#"><i class="glyphicon glyphicon-list"></i><span><?= Entity::modelTitle() ?></span></a>
                     <ul class="treeview-menu" style="right: 49px;">
 
                         <li><a href="<?= Url::toRoute(['/entityreseller/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_RESELLER) ?></a></li>
                         <li><a href="<?= Url::toRoute(['/entityfarvand/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_FARVAND) ?></a></li>
                         <li><a href="<?= Url::toRoute(['/entitypart/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_PART) ?></a></li>
                         <li><a href="<?= Url::toRoute(['/entitysamane/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_SAMANE) ?></a></li>
-                    </ul>    
+                    </ul>
                 </li>
 
                 <li class="treeview active">
-                    <a href="#"><i class="glyphicon glyphicon-time"></i><span>بازدید اخیر</span></a>        
+                    <a href="#"><i class="glyphicon glyphicon-time"></i><span>بازدید اخیر</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
                         <?php
                         $__history = Yii::$app->session->get('__history', []);
@@ -81,7 +81,7 @@ $this->registerCss('
                                 <li><a href="<?= $h['url'] ?>"><?= $h['content'] ?></a></li>
                             <?php endif; ?>
                         <?php endforeach; ?>
-                    </ul>    
+                    </ul>
                 </li>
 
             </ul>

@@ -53,4 +53,24 @@ class HrmController extends Controller
             'state' => $state,
         ] + compact('newModel', 'searchModel', 'model', 'dataProvider'));
     }
+
+    public function actionSuggest()
+    {
+        $term = Yii::$app->request->get('term');
+        $role = Yii::$app->request->get('role');
+        $hrm = new Hrm();
+        $results = [];
+        $databaseResults = $hrm::find()
+            ->filterWhere(['role' => $role])
+            ->andFilterWhere([
+                'OR',
+                ['LIKE', 'fullname', $term],
+                ['LIKE', 'code', $term],
+            ])
+            ->indexBy('id')->all();
+        foreach ($databaseResults as $databaseResult) {
+            $results[] = ['id' => $databaseResult->id, 'text' => $databaseResult->printFullnameAndCode()];
+        }
+        return $this->asJson(['results' => $results]);
+    }
 }

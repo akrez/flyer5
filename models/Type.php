@@ -53,7 +53,6 @@ class Type extends ActiveRecord
             [['name', 'shortname'], 'required'],
             [['des'], 'string', 'max' => 255],
             [['shortname'], 'unique'], //
-            [['shortname'], 'unique', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['shortname' => 'shortname']],
         ];
     }
 
@@ -117,11 +116,6 @@ class Type extends ActiveRecord
         return '';
     }
 
-    public function printNameAndShortname()
-    {
-        return $this->name . ' (' . $this->shortname . ')';
-    }
-
     public function attributeLabels()
     {
         return [
@@ -136,12 +130,22 @@ class Type extends ActiveRecord
         return $query;
     }
 
-    public static function getParentIdSelect2FieldConfig($model)
+    public function printNameAndShortname()
+    {
+        return $this->name . ' (' . $this->shortname . ')';
+    }
+
+    public function printNameAndUnit()
+    {
+        return $this->name . ' (' . $this->unit . ')';
+    }
+
+    public static function getSelect2FieldConfigParent($model)
     {
         return [
             'model' => $model,
             'attribute' => 'parentId',
-            'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->name] : []),
+            'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->printNameAndShortname()] : []),
             'options' => [
                 'id' => Html::getInputId($model, 'parentId') . '-' . $model->id,
                 'dir' => 'rtl',

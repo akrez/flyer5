@@ -2,8 +2,11 @@
 
 namespace app\models;
 
+use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\web\JsExpression;
 use app\components\Helper;
-use Yii;
+use app\models\ActiveRecord;
 
 /**
  * This is the model class for table "hrm".
@@ -110,5 +113,28 @@ class Hrm extends ActiveRecord
         $query = Hrm::find();
         $query->andFilterWhere(['id' => $id]);
         return $query;
+    }
+
+    public static function getSelect2FieldConfig($model)
+    {
+        return [
+            'model' => $model,
+            'attribute' => 'parentId',
+            'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->name] : []),
+            'options' => [
+                'id' => Html::getInputId($model, 'parentId') . '-' . $model->id,
+                'dir' => 'rtl',
+            ],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'ajax' => [
+                    'url' => Url::toRoute(['hrm/suggest']),
+                    'dataType' => 'json',
+                    'delay' => 250,
+                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
+                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                ]
+            ],
+        ];
     }
 }

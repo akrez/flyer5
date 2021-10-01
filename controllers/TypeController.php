@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\Type;
 use app\components\Helper;
 use app\models\TypeSearch;
 use app\models\TypeRaw;
@@ -14,12 +13,6 @@ use Yii;
 
 class TypeController extends Controller
 {
-
-    public static function getCategoryClass()
-    {
-        return Type::class;
-    }
-
     public function behaviors()
     {
         return $this->defaultBehaviors([

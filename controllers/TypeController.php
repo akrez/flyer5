@@ -8,6 +8,7 @@ use app\models\TypeRaw;
 use app\models\TypePart;
 use app\models\TypeSamane;
 use app\models\TypeFarvand;
+use app\models\TypeProperty;
 use app\models\TypeReseller;
 use Yii;
 
@@ -18,8 +19,8 @@ class TypeController extends Controller
         return $this->defaultBehaviors([
             [
                 'actions' => [
-                    'index-farvand', 'index-raw', 'index-samane', 'index-part', 'index-reseller',
-                    'suggest-farvand', 'suggest-raw', 'suggest-samane', 'suggest-part', 'suggest-reseller',
+                    'index-farvand', 'index-raw', 'index-samane', 'index-part', 'index-reseller', 'index-property',
+                    'suggest-farvand', 'suggest-raw', 'suggest-samane', 'suggest-part', 'suggest-property',
                 ],
                 'allow' => true,
                 'verbs' => ['POST', 'GET'],
@@ -56,6 +57,11 @@ class TypeController extends Controller
         return $this->index($id, TypeReseller::getCategoryClass());
     }
 
+    public function actionIndexProperty($id = null)
+    {
+        return $this->index($id, TypeProperty::getCategoryClass());
+    }
+
     /*
     ** SUGGEST
     */
@@ -82,6 +88,11 @@ class TypeController extends Controller
     public function actionSuggestReseller()
     {
         return $this->suggest(TypeReseller::getCategoryClass());
+    }
+
+    public function actionSuggestProperty()
+    {
+        return $this->suggest(TypeProperty::getCategoryClass());
     }
 
     protected function index($id, $categoryClass = null)

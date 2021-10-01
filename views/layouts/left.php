@@ -8,6 +8,7 @@ use app\models\TypeRaw;
 use app\models\TypePart;
 use app\models\TypeSamane;
 use app\models\TypeFarvand;
+use app\models\TypeProperty;
 use app\models\TypeReseller;
 
 $this->registerCss('
@@ -58,6 +59,7 @@ $this->registerCss('
                         <li><a href="<?= Url::toRoute(['/type/index-part']) ?>"><?= TypePart::modelTitle() ?></a></li>
                         <li><a href="<?= Url::toRoute(['/type/index-reseller']) ?>"><?= TypeReseller::modelTitle() ?></a></li>
                         <li><a href="<?= Url::toRoute(['/type/index-farvand']) ?>"><?= TypeFarvand::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/type/index-property']) ?>"><?= TypeProperty::modelTitle() ?></a></li>
                     </ul>
                 </li>
 

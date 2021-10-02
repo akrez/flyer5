@@ -122,49 +122,29 @@ class Hrm extends ActiveRecord
 
     public static function getSelect2FieldConfigProvider($model)
     {
-        return [
-            'model' => $model,
-            'attribute' => 'providerId',
+        if ($model->hasAttribute('barcode')) {
+            $id = Html::getInputId($model, 'providerId') . '-' . $model->barcode;
+        } else {
+            $id = Html::getInputId($model, 'providerId') . '-' . $model->id;
+        }
+        return Helper::getSelect2FieldConfig($model, 'providerId', Url::toRoute(['hrm/suggest']), [
             'data' => ($model->providerId && $model->provider ? [$model->provider->id => $model->provider->printFullnameAndCode()] : []),
-            'options' => [
-                'placeholder' => $model->getAttributeLabel('providerId'),
-                'id' => Html::getInputId($model, 'providerId') . '-' . $model->id,
-                'dir' => 'rtl',
-            ],
-            'pluginOptions' => [
-                'allowClear' => true,
-                'ajax' => [
-                    'url' => Url::toRoute(['hrm/suggest']),
-                    'dataType' => 'json',
-                    'delay' => 250,
-                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                ]
-            ],
-        ];
+            'placeholder' => $model->getAttributeLabel('providerId'),
+            'id' => $id,
+        ]);
     }
 
     public static function getSelect2FieldConfigSeller($model)
     {
-        return [
-            'model' => $model,
-            'attribute' => 'sellerId',
+        if ($model->hasAttribute('barcode')) {
+            $id = Html::getInputId($model, 'sellerId') . '-' . $model->barcode;
+        } else {
+            $id = Html::getInputId($model, 'sellerId') . '-' . $model->id;
+        }
+        return Helper::getSelect2FieldConfig($model, 'sellerId', Url::toRoute(['hrm/suggest', 'role' => 2]), [
             'data' => ($model->sellerId && $model->seller ? [$model->seller->id => $model->seller->printFullnameAndCode()] : []),
-            'options' => [
-                'placeholder' => $model->getAttributeLabel('sellerId'),
-                'id' => Html::getInputId($model, 'sellerId') . '-' . $model->id,
-                'dir' => 'rtl',
-            ],
-            'pluginOptions' => [
-                'allowClear' => true,
-                'ajax' => [
-                    'url' => Url::toRoute(['hrm/suggest', 'role' => 2]),
-                    'dataType' => 'json',
-                    'delay' => 250,
-                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                ]
-            ],
-        ];
+            'placeholder' => $model->getAttributeLabel('sellerId'),
+            'id' => $id,
+        ]);
     }
 }

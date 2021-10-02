@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\Helper;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -142,49 +143,29 @@ class Type extends ActiveRecord
 
     public static function getSelect2FieldConfigParent($model)
     {
-        return [
-            'model' => $model,
-            'attribute' => 'parentId',
+        if ($model->hasAttribute('barcode')) {
+            $id = Html::getInputId($model, 'parentId') . '-' . $model->barcode;
+        } else {
+            $id = Html::getInputId($model, 'parentId') . '-' . $model->id;
+        }
+        return Helper::getSelect2FieldConfig($model, 'parentId', Url::toRoute(['type/suggest-farvand']), [
             'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->printNameAndShortname()] : []),
-            'options' => [
-                'placeholder' => '',
-                'id' => Html::getInputId($model, 'parentId') . '-' . $model->id,
-                'dir' => 'rtl',
-            ],
-            'pluginOptions' => [
-                'allowClear' => true,
-                'ajax' => [
-                    'url' => Url::toRoute(['type/suggest-farvand']),
-                    'dataType' => 'json',
-                    'delay' => 250,
-                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                ]
-            ],
-        ];
+            'placeholder' => '',
+            'id' => $id,
+        ]);
     }
 
     public static function getSelect2FieldConfigRaw($model)
     {
-        return [
-            'model' => $model,
-            'attribute' => 'rawId',
+        if ($model->hasAttribute('barcode')) {
+            $id = Html::getInputId($model, 'rawId') . '-' . $model->barcode;
+        } else {
+            $id = Html::getInputId($model, 'rawId') . '-' . $model->id;
+        }
+        return Helper::getSelect2FieldConfig($model, 'rawId', Url::toRoute(['type/suggest-raw']), [
             'data' => ($model->rawId && $model->raw ? [$model->raw->id => $model->raw->printNameAndUnit()] : []),
-            'options' => [
-                'placeholder' => '',
-                'id' => Html::getInputId($model, 'rawId') . '-' . $model->id,
-                'dir' => 'rtl',
-            ],
-            'pluginOptions' => [
-                'allowClear' => true,
-                'ajax' => [
-                    'url' => Url::toRoute(['type/suggest-raw']),
-                    'dataType' => 'json',
-                    'delay' => 250,
-                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                ]
-            ],
-        ];
+            'placeholder' => '',
+            'id' => $id,
+        ]);
     }
 }

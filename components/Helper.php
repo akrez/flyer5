@@ -6,6 +6,7 @@ use Yii;
 use app\components\Jdf;
 use yii\base\Component;
 use yii\db\ActiveQuery;
+use yii\web\JsExpression;
 use yii\web\NotFoundHttpException;
 
 class Helper extends Component
@@ -129,5 +130,34 @@ class Helper extends Component
             return $model;
         }
         throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
+    }
+
+    public static function getSelect2FieldConfig($model, $attribute, $url, $options = [])
+    {
+        $options = $options + [
+            'data' => [],
+            'placeholder' => '',
+            'id' => 'id-' . rand(10000, 99999),
+        ];
+        return [
+            'model' => $model,
+            'attribute' => $attribute,
+            'data' => $options['data'],
+            'options' => [
+                'placeholder' => $options['placeholder'],
+                'id' => $options['id'],
+                'dir' => 'rtl',
+            ],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'ajax' => [
+                    'url' => $url,
+                    'dataType' => 'json',
+                    'delay' => 250,
+                    'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
+                    'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
+                ]
+            ],
+        ];
     }
 }

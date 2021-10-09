@@ -2,28 +2,34 @@
 
 namespace app\models;
 
-use app\components\Helper;
+use app\models\Hrm;
 use app\models\Type;
-use Exception;
+use yii\helpers\Html;
+use app\models\RawType;
+use app\models\RawEntity;
+use app\components\Helper;
+use app\models\ActiveRecord;
 use Yii;
+use Exception;
+use Throwable;
 
 /**
  * This is the model class for table "entity".
  *
- * @property string $factor
- * @property int $qty
- * @property int $sellerId
- * @property string $submitAt
- * @property string $factorAt
- * @property string $des
- * @property int $providerId
- * @property int $qc
- * @property int $qa
- * @property int $price
- * @property int $id
- * @property string $productAt
+ * @property string|null $factor
+ * @property string|null $place
+ * @property int|null $sellerId
+ * @property string|null $submitAt
+ * @property string|null $factorAt
+ * @property string|null $des
+ * @property int|null $providerId
+ * @property int|null $qc
+ * @property int|null $qa
+ * @property int|null $price
+ * @property string $barcode
+ * @property string|null $productAt
  * @property string $categoryId
- * @property int $parentId
+ * @property string|null $parentId
  * @property int $typeId
  *
  * @property Hrm $provider
@@ -34,27 +40,44 @@ use Yii;
  */
 class Entity extends ActiveRecord
 {
+    public const BARCODE_MAX = '1';
 
-    public $_count = 1;
+    public $count = 1;
 
     public static function tableName()
     {
         return 'entity';
     }
 
+    public static function getEntityClass()
+    {
+        return static::class;
+    }
+
+    public static function getCategoryClass()
+    {
+        return null;
+    }
+
+    public function rules()
+    {
+        return $this->defaultRules();
+    }
+
     public function defaultRules()
     {
         return [
-            [['id', 'categoryId', 'typeId'], 'required'],
-            [['id', 'qc', 'qa', 'price', 'providerId', 'parentId', 'sellerId', 'typeId', '_count'], 'integer'],
+            [['barcode', 'categoryId', 'typeId'], 'required'],
+            [['qc', 'qa', 'price', 'providerId', 'sellerId', 'typeId', 'count'], 'integer'],
+            [['barcode', 'parentId'], 'string', 'max' => 11],
             [['factor'], 'string', 'max' => 63],
             [['des'], 'string', 'max' => 255],
-            [['submitAt', 'factorAt', 'productAt'], 'string', 'max' => 19],
-            [['categoryId'], 'string', 'max' => 12],
-            [['id'], 'unique'],
+            [['place', 'submitAt', 'factorAt', 'productAt'], 'string', 'max' => 19],
+            [['categoryId'], 'string', 'max' => 36],
+            [['barcode'], 'unique'],
             [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['providerId' => 'id']],
             [['sellerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['sellerId' => 'id']],
-            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['parentId' => 'id']],
+            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['parentId' => 'barcode']],
             //
             [['parentId'], 'compare', 'operator' => '!=', 'compareAttribute' => 'id'],
             [['submitAt', 'factorAt', 'productAt'], 'validateDate'],
@@ -62,92 +85,32 @@ class Entity extends ActiveRecord
         ];
     }
 
-    public function rules()
+    public static function validQuery($categoryId = null, $barcode = null)
     {
-        $rules = [];
-        if ($this->categoryId == Type::CATEGORY_PART) {
-            $rules = [
-                [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['typeId' => 'id'], 'filter' => ['categoryId' => Type::CATEGORY_PART]],
-                [['providerId'], 'required'],
-            ];
-        }
-        if ($this->categoryId == Type::CATEGORY_SAMANE) {
-            $rules = [
-                [['typeId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['typeId' => 'id'], 'filter' => ['categoryId' => Type::CATEGORY_SAMANE]],
-            ];
-        }
-        if ($this->categoryId == Type::CATEGORY_RESELLER) {
-            $rules = [
-                [['price', 'factor', 'providerId', 'sellerId',], 'required'],
-            ];
-        }
-        return array_merge($this->defaultRules(), $rules);
+        $query = static::find();
+        $query->andFilterWhere(['categoryId' => $categoryId]);
+        $query->andFilterWhere(['barcode' => $barcode]);
+        return $query;
     }
 
-    public function attributeLabels()
+    public static function suggestBarcode()
     {
-        $labels = [];
-        if ($this->categoryId == Type::CATEGORY_FARVAND) {
-            $labels = [
-                'typeId' => 'فروند',
-            ];
+        $categoryId = static::getCategoryClass();
+        $barcode = self::validQuery($categoryId)->select('barcode')->orderBy(['barcode' => SORT_DESC])->max('barcode');
+        if (empty($barcode)) {
+            return static::BARCODE_MAX;
         }
-        if ($this->categoryId == Type::CATEGORY_PART) {
-            $labels = [
-                'typeId' => 'قطعه',
-            ];
-        }
-        if ($this->categoryId == Type::CATEGORY_SAMANE) {
-            $labels = [
-                'typeId' => 'سامانه'
-            ];
-        }
-        if ($this->categoryId == Type::CATEGORY_RESELLER) {
-            $labels = [
-                'typeId' => 'ریسلر',
-                'providerId' => 'وارد کننده',
-            ];
-        }
-        return ['id' => 'بارکد'] + $labels + ['providerId' => 'وارد کننده / سازنده'] + parent::attributeLabels();
+        return intval($barcode) + 1;
     }
 
-    public static function suggestId($categoryId)
+    public static function modelTitle()
     {
-        $id = Entity::find()->select('id')->where(['categoryId' => $categoryId])->orderBy(['id' => SORT_DESC])->scalar();
-        if (empty($id)) {
-            switch ($categoryId) {
-                case Type::CATEGORY_FARVAND:
-                    return "20200001";
-                case Type::CATEGORY_PART:
-                    return "10100051";
-                case Type::CATEGORY_RESELLER:
-                    return "40400001";
-                case Type::CATEGORY_SAMANE:
-                    return "30300001";
-            }
-        }
-        return intval($id) + 1;
-    }
-
-    public static function modelTitle($categoryId = null)
-    {
-        switch ($categoryId) {
-            case Type::CATEGORY_FARVAND:
-                return 'لیست فروند';
-            case Type::CATEGORY_PART:
-                return 'لیست قطعات';
-            case Type::CATEGORY_RESELLER:
-                return 'لیست ریسلر';
-            case Type::CATEGORY_SAMANE:
-                return 'لیست سامانه';
-        }
-        return 'موجودیت‌ها';
+        return '';
     }
 
     public function validateDate($attribute, $params)
     {
         if ($this->$attribute = Helper::formatDate($this->$attribute)) {
-            
         } else {
             $this->addError($attribute, Yii::t('yii', '{attribute} is invalid.', ['attribute' => $this->getAttributeLabel($attribute)]));
         }
@@ -168,71 +131,99 @@ class Entity extends ActiveRecord
                 $rawEntity->rawId = $rawType->rawId;
                 $rawEntity->save();
             } catch (Exception $ex) {
-                
             }
         }
     }
 
+    protected static function getSelect2FieldConfigType($model, $url = '')
+    {
+        if ($model->hasAttribute('barcode')) {
+            $id = Html::getInputId($model, 'typeId') . '-' . $model->barcode;
+        } else {
+            $id = Html::getInputId($model, 'typeId') . '-' . $model->id;
+        }
+        return Helper::getSelect2FieldConfig($model, 'typeId', $url, [
+            'data' => ($model->typeId && $model->type ? [$model->type->id => $model->type->printNameAndShortname()] : []),
+            'placeholder' => '',
+            'id' => $id,
+        ]);
+    }
+
+    /**
+     * Gets query for [[Provider]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getProvider()
     {
         return $this->hasOne(Hrm::class, ['id' => 'providerId']);
     }
 
+    /**
+     * Gets query for [[Type]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getType()
     {
         return $this->hasOne(Type::class, ['id' => 'typeId']);
     }
 
+    /**
+     * Gets query for [[Seller]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getSeller()
     {
         return $this->hasOne(Hrm::class, ['id' => 'sellerId']);
     }
 
+    /**
+     * Gets query for [[Parent]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getParent()
     {
         return $this->hasOne(Entity::class, ['id' => 'parentId']);
     }
 
+    /**
+     * Gets query for [[Parent]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getEntities()
     {
         return $this->hasMany(Entity::class, ['parentId' => 'id']);
     }
 
-    public static function resellerBatchInsert($model, $ids)
+    public static function batchInsert($newModel, $barcodes)
     {
         try {
-            $attibutes = $model->attributes;
+            $attibutes = $newModel->attributes;
             $columns = array_keys($attibutes);
             $rows = [];
-            foreach ($ids as $id) {
+            foreach ($barcodes as $barcode) {
                 $row = [];
                 foreach ($columns as $columnIndex => $column) {
-                    $row[$columnIndex] = ($column == 'id' ? $id : $attibutes[$column]);
+                    if ($column == 'barcode') {
+                        $row[$columnIndex] = $barcode;
+                    } elseif ($column == 'categoryId') {
+                        $row[$columnIndex] = $newModel::getCategoryClass();
+                    } else {
+                        $row[$columnIndex] = $attibutes[$column];
+                    }
                 }
                 $rows[] = $row;
             }
-            return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $columns, $rows)->execute() && RawEntity::resellerBatchInsert($model, $ids);
+            return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $columns, $rows)->execute() && RawEntity::batchInsert($newModel, $barcodes);
+        } catch (Throwable $ex) {
+            Yii::$app->session->setFlash('danger', $ex->getMessage());
         } catch (Exception $ex) {
             Yii::$app->session->setFlash('danger', $ex->getMessage());
         }
         return false;
     }
-
-    public function findChildModels(&$models, &$childsMap, &$parentMap)
-    {
-        $id = $this->id;
-        //
-        $models[$id] = $this;
-        $childsMap[$id] = [];
-        $parentMap[$id] = $this->parentId;
-        //
-        $childs = Entity::find()->where(['parentId' => $id])->all();
-        foreach ($childs as $child) {
-            if (!isset($models[$child->id])) {
-                $childsMap[$id][] = $child->id;
-                $child->findChildModels($models, $childsMap, $parentMap);
-            }
-        }
-    }
-
 }

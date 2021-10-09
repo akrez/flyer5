@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\Type;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "type".
@@ -45,5 +47,10 @@ class TypePart extends Type
         return [
             'parentId' => 'فروند مرتبط'
         ] + parent::attributeLabels();
+    }
+
+    public static function getSuggestUrl()
+    {
+        return Url::toRoute(['type/suggest-part']);
     }
 }

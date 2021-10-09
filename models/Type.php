@@ -141,6 +141,11 @@ class Type extends ActiveRecord
         return $this->name . ' (' . $this->unit . ')';
     }
 
+    public static function getSuggestUrl()
+    {
+        return '';
+    }
+
     public static function getSelect2FieldConfigParent($model)
     {
         if ($model->hasAttribute('barcode')) {
@@ -148,7 +153,7 @@ class Type extends ActiveRecord
         } else {
             $id = Html::getInputId($model, 'parentId') . '-' . $model->id;
         }
-        return Helper::getSelect2FieldConfig($model, 'parentId', Url::toRoute(['type/suggest-farvand']), [
+        return Helper::getSelect2FieldConfig($model, 'parentId', TypeFarvand::getSuggestUrl(), [
             'data' => ($model->parentId && $model->parent ? [$model->parent->id => $model->parent->printNameAndShortname()] : []),
             'placeholder' => '',
             'id' => $id,
@@ -162,7 +167,7 @@ class Type extends ActiveRecord
         } else {
             $id = Html::getInputId($model, 'rawId') . '-' . $model->id;
         }
-        return Helper::getSelect2FieldConfig($model, 'rawId', Url::toRoute(['type/suggest-raw']), [
+        return Helper::getSelect2FieldConfig($model, 'rawId', TypeRaw::getSuggestUrl(), [
             'data' => ($model->rawId && $model->raw ? [$model->raw->id => $model->raw->printNameAndUnit()] : []),
             'placeholder' => '',
             'id' => $id,

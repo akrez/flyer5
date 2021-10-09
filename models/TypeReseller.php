@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\Type;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "type".
@@ -38,5 +40,10 @@ class TypeReseller extends Type
     public static function printCategory($categoryId = null)
     {
         return 'ريسلر';
+    }
+
+    public static function getSuggestUrl()
+    {
+        return Url::toRoute(['type/suggest-reseller']);
     }
 }

@@ -49,8 +49,9 @@ class RawEntity extends ActiveRecord
         return $this->hasOne(Raw::class, ['id' => 'rawId']);
     }
 
-    public static function resellerBatchInsert($entity, $entityIds)
+    public static function batchInsert($entity, $entityBarcodes)
     {
+        return true;
         try {
             $rows = [];
             $columns = array_keys((new RawEntity())->attributes);
@@ -59,11 +60,11 @@ class RawEntity extends ActiveRecord
                 return true;
             }
             foreach ($rawTypes as $rawType) {
-                foreach ($entityIds as $entityId) {
+                foreach ($entityBarcodes as $entityBarcode) {
                     $row = [];
                     foreach ($columns as $columnIndex => $column) {
-                        if ($column == 'entityId') {
-                            $row[$columnIndex] = $entityId;
+                        if ($column == 'entityBarcode') {
+                            $row[$columnIndex] = $entityBarcode;
                         } elseif ($column == 'id') {
                             $row[$columnIndex] = null;
                         } elseif ($rawType->hasAttribute($column)) {

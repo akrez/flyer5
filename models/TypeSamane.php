@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\Type;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "type".
@@ -35,5 +37,10 @@ class TypeSamane extends Type
     public static function printCategory($categoryId = null)
     {
         return 'سامانه';
+    }
+
+    public static function getSuggestUrl()
+    {
+        return Url::toRoute(['type/suggest-samane']);
     }
 }

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\Helper;
+use app\models\Entity;
 use app\models\EntityFarvand;
 use app\models\EntitySearch;
 use app\models\TypeSearch;
@@ -33,47 +34,47 @@ class EntityController extends Controller
     /*
     ** INDEX
     */
-    public function actionIndexFarvand($id = null)
+    public function actionIndexFarvand($barcode = null)
     {
-        return $this->index($id, EntityFarvand::getEntityClass());
+        return $this->index($barcode, EntityFarvand::getEntityClass());
     }
 
-    public function actionIndexRaw($id = null)
+    public function actionIndexRaw($barcode = null)
     {
-        return $this->index($id, TypeRaw::getCategoryClass());
+        return $this->index($barcode, TypeRaw::getCategoryClass());
     }
 
-    public function actionIndexSamane($id = null)
+    public function actionIndexSamane($barcode = null)
     {
-        return $this->index($id, TypeSamane::getCategoryClass());
+        return $this->index($barcode, TypeSamane::getCategoryClass());
     }
 
-    public function actionIndexPart($id = null)
+    public function actionIndexPart($barcode = null)
     {
-        return $this->index($id, TypePart::getCategoryClass());
+        return $this->index($barcode, TypePart::getCategoryClass());
     }
 
-    public function actionIndexReseller($id = null)
+    public function actionIndexReseller($barcode = null)
     {
-        return $this->index($id, TypeReseller::getCategoryClass());
+        return $this->index($barcode, TypeReseller::getCategoryClass());
     }
 
-    public function actionIndexProperty($id = null)
+    public function actionIndexProperty($barcode = null)
     {
-        return $this->index($id, TypeProperty::getCategoryClass());
+        return $this->index($barcode, TypeProperty::getCategoryClass());
     }
 
-    protected function index($id, $entityClass = null)
+    protected function index($barcode, $entityClass = null)
     {
         $categoryClass = $entityClass::getCategoryClass();
         //
-        $id = empty($id) ? null : intval($id);
+        $barcode = empty($barcode) ? null : intval($barcode);
         $post = Yii::$app->request->post();
         $state = Yii::$app->request->get('state', '');
         $updateCacheNeeded = null;
         //
-        if ($id) {
-            $model = Helper::findOrFail($entityClass::validQuery()->andWhere(['id' => $id]));
+        if ($barcode) {
+            $model = Helper::findOrFail($entityClass::validQuery()->andWhere(['barcode' => $barcode]));
         } else {
             $model = null;
         }
@@ -81,9 +82,23 @@ class EntityController extends Controller
         $searchModel = new EntitySearch();
         //
         if ($state == 'save' && $newModel->load($post)) {
-            $updateCacheNeeded = Helper::store($newModel, $post, [
-                'categoryId' => $categoryClass,
-            ]);
+            $barcodes = [];
+            for ($i = 0; $i < $newModel->count; $i++) {
+                $barcodes[] = $newModel->barcode + $i;
+            }
+            $duplicateBarcodes = Entity::validQuery()->select('barcode')->where(['barcode' => $barcodes])->column();
+            if ($duplicateBarcodes) {
+                Yii::$app->session->setFlash('danger', 'این بارکدها تکراری هستند: ' . implode(' , ', $duplicateBarcodes));
+            } else {
+                $transaction = Yii::$app->db->beginTransaction();
+                $updateCacheNeeded = Entity::batchInsert($newModel, $barcodes);
+                if ($updateCacheNeeded) {
+                    $transaction->commit();
+                    $newModel = new $entityClass();
+                } else {
+                    $transaction->rollBack();
+                }
+            }
         } elseif ($state == 'update' && $model) {
             $updateCacheNeeded = Helper::store($model, $post, [
                 'categoryId' => $categoryClass,
@@ -92,7 +107,7 @@ class EntityController extends Controller
             $updateCacheNeeded = Helper::delete($model);
         }
         if ($updateCacheNeeded) {
-            $newModel = new $categoryClass();
+            $newModel = new $entityClass();
         }
         //
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $entityClass);

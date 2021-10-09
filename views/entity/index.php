@@ -1,305 +1,266 @@
 <?php
 
-use app\assets\DatepickerAsset;
-use app\components\TableView;
-use app\models\Entity;
-use app\models\RawEntity;
-use app\models\Relation;
-use app\models\Type;
+use app\models\Hrm;
+use app\models\Model;
 use kartik\select2\Select2;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\web\JsExpression;
-use yii\web\View;
+use yii\widgets\Pjax;
+use app\widgets\Alert;
+use yii\grid\GridView;
+use app\models\TypeRaw;
+use app\models\TypePart;
+use app\models\TypeFarvand;
+use app\models\TypeReseller;
+use app\assets\DatepickerAsset;
 use yii\widgets\LinkPager;
 
-$this->title = Entity::modelTitle($categoryId);
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\EntitySearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = $newModel::modelTitle();
 DatepickerAsset::register($this);
-$this->registerJs('
-    $(".entitySubmitatDatepicker, .entityFactoratDatepicker, .entityProductatDatepicker").persianDatepicker({
-        calendar: {
-            persian: {
-                showHint: true,
-                locale: "fa"
-            },
-            gregorian: {
-                showHint: true
-            }
-        },
-        "toolbox": {
-            "calendarSwitch": {
-                "enabled": false,
-            }
-        },
-        initialValue: false,
-        initialValueType: "persian",
-        autoClose: true,
-        observer: true,
-        format: "YYYY-MM-DD"
-    });
-', View::POS_END);
 ?>
 
-<h1 class="pb20"><?= Html::encode($this->title) ?></h1>
+<h3 class="pb20"><?= Html::encode($this->title) ?></h3>
 
-<div class="table-responsive">
+<?php
+$this->registerJs("
+$(document).on('click','.btn[toggle]',function() {
+    //
+    var btn = $(this);
+    var isHidden = $(btn.attr('toggle')).is(':hidden');    
+    //
+    $('.btn[toggle]').each(function(i) {
+        var toggleBtn = $(this);
+        $(toggleBtn.attr('toggle')).hide();
+        toggleBtn.addClass('btn-default');
+        toggleBtn.removeClass('btn-warning');
+    });
+    //
+    if(isHidden) {
+        $(btn.attr('toggle')).show();
+        btn.addClass('btn-warning');
+        btn.removeClass('btn-default');
+    }
+});
 
-    <?=
-    TableView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'footerModel' => $newModel,
-        'rowOptions' => function ($model, $key, $index, $grid) {
-            return [
-                'action' => Url::current(['id' => $model->id]),
-            ];
-        },
-        'filterRowOptions' => [
-            'action' => Url::current(),
-            'method' => 'get',
-        ],
-        'footerRowOptions' => [
-            'action' => Url::current(['id' => null]),
-        ],
-        'columns' => [
-            [
-                'attribute' => '_count',
-                'filter' => false,
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $index + 1;
-                },
-                'footer' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, '_count')->textInput(['typ' => 'number']);
-                },
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_RESELLER]),
-            ],
-            [
-                'attribute' => 'id',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'id')->textInput(['maxlength' => true]);
-                },
-                'format' => 'raw',
-            ],
-            [
-                'attribute' => 'typeId',
-                'filter' => true,
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    $url = null;
-                    if ($model->categoryId == Type::CATEGORY_SAMANE) {
-                        $url = 'typesamane/suggest';
-                    }
-                    if ($model->categoryId == Type::CATEGORY_FARVAND) {
-                        $url = 'typefarvand/suggest';
-                    }
-                    if ($model->categoryId == Type::CATEGORY_PART) {
-                        $url = 'typepart/suggest';
-                    }
-                    if ($model->categoryId == Type::CATEGORY_RESELLER) {
-                        $url = 'typereseller/suggest';
-                    }
-                    $config = [
-                        'data' => ($model->typeId && $model->type ? [$model->type->id => $model->type->name . ' (' . $model->type->shortname . ')'] : []),
-                        'options' => [
-                            'placeholder' => $model->getAttributeLabel('typeId'),
-                            'id' => Html::getInputId($model, 'typeId') . '-' . ($model->isNewRecord ? 'new-' : 'old-') . $model->id,
-                            'dir' => 'rtl',
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'ajax' => [
-                                'url' => Url::toRoute([$url]),
-                                'dataType' => 'json',
-                                'delay' => 250,
-                                'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                                'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                            ]
-                        ],
-                    ];
-                    return $form->field($model, 'typeId')->widget(Select2::class, $config);
-                },
-                'footer' => true,
-                'format' => 'raw',
-            ],
-            [
-                'attribute' => 'price',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'price')->textInput(['maxlength' => true]);
-                },
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_RESELLER]),
-            ],
-            [
-                'attribute' => 'qa',
-                'format' => 'raw',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'qa')->checkbox(['value' => "1"], false);
-                },
-                'filter' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'qa')->dropDownList([
-                                null => '',
-                                0 => 'ندارد',
-                                1 => 'دارد',
-                    ]);
-                },
-                'visible' => in_array($categoryId, [Type::CATEGORY_FARVAND, Type::CATEGORY_PART]),
-            ],
-            [
-                'attribute' => 'qc',
-                'format' => 'raw',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'qc')->checkbox(['value' => "1"], false);
-                },
-                'filter' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'qc')->dropDownList([
-                                null => '',
-                                0 => 'ندارد',
-                                1 => 'دارد',
-                    ]);
-                },
-                'visible' => in_array($categoryId, [Type::CATEGORY_FARVAND, Type::CATEGORY_PART]),
-            ],
-            [
-                'attribute' => 'factor',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'factor')->textInput(['maxlength' => true]);
-                },
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_RESELLER]),
-            ],
-            [
-                'attribute' => 'factorAt',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'factorAt')->textInput(['class' => 'form-control entityFactoratDatepicker']);
-                },
-                'filter' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'factorAt')->textInput();
-                },
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_RESELLER]),
-            ],
-            [
-                'attribute' => 'submitAt',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'submitAt')->textInput(['class' => 'form-control entitySubmitatDatepicker']);
-                },
-                'filter' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'submitAt')->textInput();
-                },
-                'format' => 'raw',
-            ],
-            [
-                'attribute' => 'productAt',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'productAt')->textInput(['class' => 'form-control entityProductatDatepicker']);
-                },
-                'filter' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'productAt')->textInput();
-                },
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_FARVAND, Type::CATEGORY_PART]),
-            ],
-            [
-                'attribute' => 'providerId',
-                'filter' => true,
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    $config = [
-                        'data' => ($model->providerId && $model->provider ? [$model->provider->id => $model->provider->fullname . ' (' . $model->provider->code . ')'] : []),
-                        'options' => [
-                            'placeholder' => $model->getAttributeLabel('providerId'),
-                            'id' => Html::getInputId($model, 'providerId') . '-' . ($model->isNewRecord ? 'new-' : 'old-') . $model->id,
-                            'dir' => 'rtl',
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'ajax' => [
-                                'url' => Url::toRoute(['hrm/suggest']),
-                                'dataType' => 'json',
-                                'delay' => 250,
-                                'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                                'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                            ]
-                        ],
-                    ];
-                    return $form->field($model, 'providerId')->widget(Select2::class, $config);
-                },
-                'footer' => true,
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_FARVAND, Type::CATEGORY_PART, Type::CATEGORY_RESELLER,]),
-            ],
-            [
-                'attribute' => 'sellerId',
-                'filter' => true,
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    $config = [
-                        'data' => ($model->sellerId && $model->seller ? [$model->seller->id => $model->seller->fullname . ' (' . $model->seller->code . ')'] : []),
-                        'options' => [
-                            'placeholder' => $model->getAttributeLabel('sellerId'),
-                            'id' => Html::getInputId($model, 'sellerId') . '-' . ($model->isNewRecord ? 'new-' : 'old-') . $model->id,
-                            'dir' => 'rtl',
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'ajax' => [
-                                'url' => Url::toRoute(['hrm/suggest']),
-                                'dataType' => 'json',
-                                'delay' => 250,
-                                'data' => new JsExpression('function(params) { return {term:params.term, page: params.page}; }'),
-                                'results' => new JsExpression('function(data,page) { return {results:data.results}; }'),
-                            ]
-                        ],
-                    ];
-                    return $form->field($model, 'sellerId')->widget(Select2::class, $config);
-                },
-                'footer' => true,
-                'format' => 'raw',
-                'visible' => in_array($categoryId, [Type::CATEGORY_RESELLER]),
-            ],
-            [
-                'attribute' => 'des',
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return $form->field($model, 'des')->textInput(['maxlength' => true]);
-                },
-                'format' => 'raw',
-            ],
-            [
-                'label' => '',
-                'format' => 'raw',
-                'filter' => function ($model, $key, $index, $grid, $form) {
-                    return Html::submitButton(' <span class="glyphicon glyphicon-search"></span> ' . Yii::t('app', 'Search'), ['class' => 'btn btn-info btn-block btn-social']);
-                },
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return Html::submitButton(' <span class="glyphicon glyphicon-pencil"></span> ' . Yii::t('app', 'Update'), ['class' => 'btn btn-primary btn-block btn-social']);
-                },
-                'footer' => function ($model, $key, $index, $grid, $form) {
-                    return Html::submitButton(' <span class="glyphicon glyphicon-plus"></span> ' . Yii::t('app', 'Save'), ['class' => 'btn btn-success btn-block btn-social']);
-                },
-            ],
-            [
-                'label' => '',
-                'format' => 'raw',
-                'filter' => false,
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelName(), Url::toRoute(['/relation/index', 'parentId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social']);
-                },
-                'footer' => false,
-            ],
-            [
-                'label' => '',
-                'format' => 'raw',
-                'filter' => false,
-                'value' => function ($model, $key, $index, $grid, $form) {
-                    return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelName(), Url::toRoute(['/rawentity/index', 'entityId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social']);
-                },
-                'footer' => false,
-            ],
-        ],
-    ]);
-    ?>
-</div>
+$(document).on('pjax:beforeSend', function(xhr, options) {
+    $('.ajax-splash-show').css('display','inline-block');
+    $('.ajax-splash-hide').css('display','none');
+});
+$(document).on('pjax:complete', function(xhr, textStatus, options) {
+    $('.ajax-splash-show').css('display','none');
+    $('.ajax-splash-hide').css('display','inline-block');
+});
+");
 
-<?=
-LinkPager::widget([
-    'pagination' => $dataProvider->getPagination(),
+Pjax::begin([
+    'id' => "entity-pjax",
+    'timeout' => false,
+    'enablePushState' => false,
 ]);
+
+$this->registerJs("
+$('.entitySubmitatDatepicker, .entityFactoratDatepicker, .entityProductatDatepicker').persianDatepicker({
+    calendar: {
+        persian: {
+            showHint: true,
+            locale: 'fa'
+        },
+        gregorian: {
+            showHint: true
+        }
+    },
+    'toolbox': {
+        'calendarSwitch': {
+            'enabled': false,
+        }
+    },
+    initialValue: false,
+    initialValueType: 'persian',
+    autoClose: true,
+    observer: true,
+    format: 'YYYY-MM-DD'
+});
+");
+
+$visableInFarvandAndPart = (in_array($newModel::getCategoryClass(), [TypeFarvand::getCategoryClass(), TypePart::getCategoryClass()]));
+$visableInReseller = (in_array($newModel::getCategoryClass(), [TypeReseller::getCategoryClass()]));
+$visableAttributes = [
+    'qc' => $visableInFarvandAndPart,
+    'qa' => $visableInFarvandAndPart,
+    'productAt' => $visableInFarvandAndPart,
+    'providerId' => $visableInFarvandAndPart,
+    //
+    'factor' => $visableInReseller,
+    'price' => $visableInReseller,
+    'factorAt' => $visableInReseller,
+    'sellerId' => $visableInReseller,
+    //
+    'barcode' => true,
+    'place' => true,
+    'des' => true,
+    'submitAt' => true,
+    'typeId' => true,
+    //
+    true
+];
+$colspan = count(array_filter($visableAttributes));
+?>
+<div class="row">
+    <div class="col-sm-12">
+        <?= Alert::widget() ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-primary" style="position: relative;">
+            <div class="ajax-splash-show splash-style"></div>
+            <div class="panel-heading"><?= Html::encode($this->title) ?></div>
+            <?php
+            echo GridView::widget([
+                'layout' => '{items}',
+                'tableOptions' => ['style' => 'margin-bottom: 0px', 'class' => 'table table-bordered table-striped'],
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    [
+                        'attribute' => 'barcode',
+                        'visible' => $visableAttributes['barcode'],
+
+                    ],
+                    [
+                        'attribute' => 'qc',
+                        'filter' => [
+                            0 => Yii::t('yii', 'No'),
+                            1 => Yii::t('yii', 'Yes'),
+                        ],
+                        'visible' => $visableAttributes['qc'],
+                        'format' => 'boolean',
+                    ],
+                    [
+                        'attribute' => 'qa',
+                        'filter' => [
+                            0 => Yii::t('yii', 'No'),
+                            1 => Yii::t('yii', 'Yes'),
+                        ],
+                        'visible' => $visableAttributes['qa'],
+                        'format' => 'boolean',
+                    ],
+                    [
+                        'attribute' => 'factor',
+                        'visible' => $visableAttributes['factor'],
+                    ],
+                    [
+                        'attribute' => 'price',
+                        'visible' => $visableAttributes['price'],
+                    ],
+                    [
+                        'attribute' => 'des',
+                        'visible' => $visableAttributes['des'],
+
+                    ],
+                    [
+                        'attribute' => 'place',
+                        'visible' => $visableAttributes['place'],
+                    ],
+                    [
+                        'attribute' => 'submitAt',
+                        'filter' => Html::activeInput('text', $searchModel, 'submitAt', ['class' => 'form-control entitySubmitatDatepicker']),
+                        'visible' => $visableAttributes['submitAt'],
+                    ],
+                    [
+                        'attribute' => 'factorAt',
+                        'filter' => Html::activeInput('text', $searchModel, 'factorAt', ['class' => 'form-control entityFactoratDatepicker']),
+                        'visible' => $visableAttributes['factorAt'],
+                    ],
+                    [
+                        'attribute' => 'productAt',
+                        'filter' => Html::activeInput('text', $searchModel, 'productAt', ['class' => 'form-control entityProductatDatepicker']),
+                        'visible' => $visableAttributes['productAt'],
+                    ],
+                    [
+                        'attribute' => 'providerId',
+                        'value' => function ($model) {
+                            if ($model->provider) {
+                                return $model->provider->printFullnameAndCode();
+                            }
+                            return '';
+                        },
+                        'filter' => Select2::widget(Hrm::getSelect2FieldConfigProvider($searchModel)),
+                        'visible' => $visableAttributes['providerId'],
+                    ],
+                    [
+                        'attribute' => 'sellerId',
+                        'value' => function ($model) {
+                            return $model->seller->printFullnameAndCode();
+                        },
+                        'filter' => Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)),
+                        'visible' => $visableAttributes['sellerId'],
+                    ],
+                    [
+                        'attribute' => 'typeId',
+                        'value' => function ($model) {
+                            if ($model->categoryId == TypeRaw::getCategoryClass()) {
+                                return $model->type->printNameAndUnit();
+                            }
+                            return $model->type->printNameAndShortname();
+                        },
+                        'filter' => Select2::widget($newModel::getSelect2FieldConfigType($searchModel)),
+                        'visible' => $visableAttributes['typeId'],
+                    ],
+                    [
+                        'value' => function ($dataProviderModel) use ($model, $state) {
+                            $btnClass = ' btn-default ';
+                            if ($model && $model->barcode == $dataProviderModel->barcode && $state == 'update') {
+                                $btnClass = ' btn-warning ';
+                            }
+                            return Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . $btnClass, 'toggle' => "#row-update-" . $dataProviderModel->barcode]);
+                        },
+                        'format' => 'raw',
+                    ]
+                ],
+                'afterRow' => function ($dataProviderModel) use ($model, $state, $visableAttributes) {
+                    $displayStyle = 'display: none;';
+                    if ($model && $model->barcode == $dataProviderModel->barcode && $state == 'update') {
+                        $dataProviderModel = $model;
+                        $displayStyle = 'display: table-row;';
+                    }
+                    //
+                    ob_start();
+                    echo $this->render('_form', [
+                        'model' => $dataProviderModel,
+                        'visableAttributes' => $visableAttributes,
+                    ]);
+                    $formContent = ob_get_contents();
+                    ob_end_clean();
+                    //
+                    return Html::beginTag('tr', [
+                        'style' => $displayStyle,
+                        'id' => "row-update-" . $dataProviderModel->barcode,
+                    ]) . '<td colspan="16"> ' . $formContent . ' </td></tr>';
+                },
+            ]);
+            ?>
+            <div class="panel-footer panel-success" style="padding: 8px;">
+                <?= $this->render('_form', [
+                    'model' => $newModel,
+                    'visableAttributes' => $visableAttributes,
+                ]);
+                ?>
+            </div>
+        </div>
+
+    </div>
+</div>
+<?php
+
+echo LinkPager::widget([
+    'pagination' => $dataProvider->getPagination(),
+    'options' => [
+        'class' => 'pagination',
+    ]
+]);
+Pjax::end();
 ?>

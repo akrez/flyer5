@@ -45,6 +45,8 @@ class Model extends BaseModel
             //
             'qty' => 'مقدار',
             'rawId' => 'ماده خام',
+            'place' => 'مکان',
+            'count' => 'تعداد',
             //
             'price' => 'قیمت',
             'factor' => 'فاکتور',
@@ -61,7 +63,7 @@ class Model extends BaseModel
             //
             'entityId' => 'موجودیت',
             '_count' => 'تعداد سری',
+            'barcode' => 'بارکد',
         ];
     }
-
 }

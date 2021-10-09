@@ -12,8 +12,8 @@ class EntitySearch extends Entity
     public function rules()
     {
         return [
-            [['id', 'qc', 'qa', 'providerId', 'parentId', 'sellerId', 'typeId'], 'integer'],
-            [['factor', 'des', 'submitAt', 'factorAt', 'productAt'], 'safe'],
+            [['qc', 'qa', 'providerId', 'sellerId', 'typeId', 'price'], 'integer'],
+            [['barcode', 'factor', 'des', 'place', 'submitAt', 'factorAt', 'productAt'], 'safe'],
         ];
     }
 
@@ -30,16 +30,18 @@ class EntitySearch extends Entity
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $newModel, $parentModel)
+    public function search($params, $categoryClass = null)
     {
-        $query = $newModel::find()->where(['categoryId' => $newModel->categoryId])->with('parent')->with('type')->with('provider')->with('seller');
-
+        $instanceModel = new $categoryClass();
+        $query = $instanceModel::find()
+            ->andWhere(['categoryId' => $instanceModel::getCategoryClass()])
+            ->with('parent')->with('type')->with('provider')->with('seller');
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['id' => SORT_DESC,]],
-            'pagination' => ['pagesize' => 5,]
+            'sort' => ['defaultOrder' => ['barcode' => SORT_DESC,]],
+            'pagination' => ['pagesize' => 20,]
         ]);
 
         $this->load($params);
@@ -52,7 +54,8 @@ class EntitySearch extends Entity
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'barcode' => $this->barcode,
+            'price' => $this->price,
             'qc' => $this->qc,
             'qa' => $this->qa,
             'providerId' => $this->providerId,
@@ -62,12 +65,12 @@ class EntitySearch extends Entity
         ]);
 
         $query->andFilterWhere(['like', 'factor', $this->factor])
-                ->andFilterWhere(['like', 'des', $this->des])
-                ->andFilterWhere(['like', 'submitAt', $this->submitAt])
-                ->andFilterWhere(['like', 'factorAt', $this->factorAt])
-                ->andFilterWhere(['like', 'productAt', $this->productAt]);
+            ->andFilterWhere(['like', 'place', $this->place])
+            ->andFilterWhere(['like', 'des', $this->des])
+            ->andFilterWhere(['like', 'submitAt', $this->submitAt])
+            ->andFilterWhere(['like', 'factorAt', $this->factorAt])
+            ->andFilterWhere(['like', 'productAt', $this->productAt]);
 
         return $dataProvider;
     }
-
 }

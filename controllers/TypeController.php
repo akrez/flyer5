@@ -20,7 +20,7 @@ class TypeController extends Controller
             [
                 'actions' => [
                     'index-farvand', 'index-raw', 'index-samane', 'index-part', 'index-reseller', 'index-property',
-                    'suggest-farvand', 'suggest-raw', 'suggest-samane', 'suggest-part', 'suggest-property',
+                    'suggest-farvand', 'suggest-raw', 'suggest-samane', 'suggest-part', 'suggest-reseller', 'suggest-property',
                 ],
                 'allow' => true,
                 'verbs' => ['POST', 'GET'],

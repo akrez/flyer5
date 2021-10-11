@@ -91,7 +91,7 @@ $visableAttributes = [
     'qc' => $visableInFarvandAndPart,
     'qa' => $visableInFarvandAndPart,
     'productAt' => $visableInFarvandAndPart,
-    'providerId' => $visableInFarvandAndPart,
+    'providerId' => $visableInFarvandAndPart || $visableInReseller,
     //
     'factor' => $visableInReseller,
     'price' => $visableInReseller,

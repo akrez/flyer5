@@ -1,15 +1,20 @@
 <?php
 
-use app\models\Entity;
 use app\models\Type;
-use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\Html;
+use app\models\Entity;
 use app\models\TypeRaw;
 use app\models\TypePart;
+use app\models\EntityPart;
 use app\models\TypeSamane;
 use app\models\TypeFarvand;
+use app\models\EntitySamane;
 use app\models\TypeProperty;
 use app\models\TypeReseller;
+use app\models\EntityFarvand;
+use app\models\EntityProperty;
+use app\models\EntityReseller;
 
 $this->registerCss('
     .sidebar-mini.sidebar-collapse .user-panel {
@@ -53,7 +58,7 @@ $this->registerCss('
                 </li>
 
                 <li class="treeview">
-                    <a href="#"><i class="glyphicon glyphicon-th"></i><span>اطلاعات پایه</span></a>
+                    <a href="#"><i class="glyphicon glyphicon-th"></i><span><?= Type::modelTitle() ?></span></a>
                     <ul class="treeview-menu" style="right: 49px;">
                         <li><a href="<?= Url::toRoute(['/type/index-samane']) ?>"><?= TypeSamane::modelTitle() ?></a></li>
                         <li><a href="<?= Url::toRoute(['/type/index-part']) ?>"><?= TypePart::modelTitle() ?></a></li>
@@ -66,11 +71,11 @@ $this->registerCss('
                 <li class="treeview">
                     <a href="#"><i class="glyphicon glyphicon-list"></i><span><?= Entity::modelTitle() ?></span></a>
                     <ul class="treeview-menu" style="right: 49px;">
-
-                        <li><a href="<?= Url::toRoute(['/entityreseller/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_RESELLER) ?></a></li>
-                        <li><a href="<?= Url::toRoute(['/entityfarvand/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_FARVAND) ?></a></li>
-                        <li><a href="<?= Url::toRoute(['/entitypart/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_PART) ?></a></li>
-                        <li><a href="<?= Url::toRoute(['/entitysamane/index']) ?>"><?= Entity::modelTitle(Type::CATEGORY_SAMANE) ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/entity/index-samane']) ?>"><?= EntitySamane::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/entity/index-part']) ?>"><?= EntityPart::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/entity/index-reseller']) ?>"><?= EntityReseller::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/entity/index-farvand']) ?>"><?= EntityFarvand::modelTitle() ?></a></li>
+                        <li><a href="<?= Url::toRoute(['/entity/index-property']) ?>"><?= EntityProperty::modelTitle() ?></a></li>
                     </ul>
                 </li>
 

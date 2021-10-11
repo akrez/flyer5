@@ -6,13 +6,10 @@ use app\components\Helper;
 use app\models\Entity;
 use app\models\EntityFarvand;
 use app\models\EntitySearch;
-use app\models\TypeSearch;
-use app\models\TypeRaw;
-use app\models\TypePart;
-use app\models\TypeSamane;
-use app\models\TypeFarvand;
-use app\models\TypeProperty;
-use app\models\TypeReseller;
+use app\models\EntityPart;
+use app\models\EntityProperty;
+use app\models\EntityReseller;
+use app\models\EntitySamane;
 use Yii;
 
 class EntityController extends Controller
@@ -39,29 +36,24 @@ class EntityController extends Controller
         return $this->index($barcode, EntityFarvand::getEntityClass());
     }
 
-    public function actionIndexRaw($barcode = null)
-    {
-        return $this->index($barcode, TypeRaw::getCategoryClass());
-    }
-
     public function actionIndexSamane($barcode = null)
     {
-        return $this->index($barcode, TypeSamane::getCategoryClass());
+        return $this->index($barcode, EntitySamane::getEntityClass());
     }
 
     public function actionIndexPart($barcode = null)
     {
-        return $this->index($barcode, TypePart::getCategoryClass());
+        return $this->index($barcode, EntityPart::getEntityClass());
     }
 
     public function actionIndexReseller($barcode = null)
     {
-        return $this->index($barcode, TypeReseller::getCategoryClass());
+        return $this->index($barcode, EntityReseller::getEntityClass());
     }
 
     public function actionIndexProperty($barcode = null)
     {
-        return $this->index($barcode, TypeProperty::getCategoryClass());
+        return $this->index($barcode, EntityProperty::getEntityClass());
     }
 
     protected function index($barcode, $entityClass = null)

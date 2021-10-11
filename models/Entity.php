@@ -105,7 +105,7 @@ class Entity extends ActiveRecord
 
     public static function modelTitle()
     {
-        return '';
+        return 'لیست‌ها';
     }
 
     public function validateDate($attribute, $params)

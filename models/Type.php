@@ -99,7 +99,7 @@ class Type extends ActiveRecord
 
     public static function modelTitle($categoryId = null)
     {
-        return 'موجودیت‌ها';
+        return 'اطلاعات پایه';
     }
 
     public static function getCategoryClass()

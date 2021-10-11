@@ -2,18 +2,23 @@
 
 namespace app\models;
 
+use app\models\Type;
+use app\models\Entity;
+use app\models\RawType;
+use Exception;
+use Throwable;
 use Yii;
 
 /**
  * This is the model class for table "raw_entity".
  *
  * @property int $id
- * @property int $entityId
+ * @property string $entityBarcode
  * @property int $qty
  * @property int $rawId
  *
  * @property Entity $entity
- * @property Raw $raw
+ * @property Type $raw
  */
 class RawEntity extends ActiveRecord
 {
@@ -31,27 +36,37 @@ class RawEntity extends ActiveRecord
     public function rules()
     {
         return [
-            [['entityId', 'rawId'], 'required'],
-            [['entityId', 'rawId'], 'integer'],
+            [['entityBarcode', 'rawId'], 'required'],
+            [['entityBarcode'], 'string', 'max' => 11],
+            [['rawId'], 'integer'],
             [['qty'], 'double', 'min' => 0],
-            [['entityId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['entityId' => 'id']],
-            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Raw::class, 'targetAttribute' => ['rawId' => 'id']],
+            [['entityBarcode'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['entityBarcode' => 'barcode']],
+            [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['rawId' => 'id']],
         ];
     }
 
+    /**
+     * Gets query for [[EntityBarcode0]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getEntity()
     {
-        return $this->hasOne(Entity::class, ['id' => 'entityId']);
+        return $this->hasOne(Entity::class, ['barcode' => 'entityBarcode']);
     }
 
+    /**
+     * Gets query for [[Type]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getRaw()
     {
-        return $this->hasOne(Raw::class, ['id' => 'rawId']);
+        return $this->hasOne(Type::class, ['id' => 'rawId']);
     }
 
     public static function batchInsert($entity, $entityBarcodes)
     {
-        return true;
         try {
             $rows = [];
             $columns = array_keys((new RawEntity())->attributes);
@@ -79,8 +94,9 @@ class RawEntity extends ActiveRecord
             return boolval(Yii::$app->db->createCommand()->batchInsert(self::tableName(), $columns, $rows)->execute());
         } catch (Exception $ex) {
             Yii::$app->session->setFlash('danger', $ex->getMessage());
+        } catch (Throwable $ex) {
+            Yii::$app->session->setFlash('danger', $ex->getMessage());
         }
         return false;
     }
-
 }

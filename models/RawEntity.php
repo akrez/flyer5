@@ -36,8 +36,7 @@ class RawEntity extends ActiveRecord
     public function rules()
     {
         return [
-            [['entityBarcode', 'rawId'], 'required'],
-            [['entityBarcode'], 'string', 'max' => 11],
+            [['rawId'], 'required'],
             [['rawId'], 'integer'],
             [['qty'], 'double', 'min' => 0],
             [['entityBarcode'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['entityBarcode' => 'barcode']],
@@ -63,6 +62,14 @@ class RawEntity extends ActiveRecord
     public function getRaw()
     {
         return $this->hasOne(Type::class, ['id' => 'rawId']);
+    }
+
+    public static function validQuery($entityBarcode, $id = null)
+    {
+        $query = static::find();
+        $query->andWhere(['entityBarcode' => $entityBarcode]);
+        $query->andFilterWhere(['id' => $id]);
+        return $query;
     }
 
     public static function batchInsert($entity, $entityBarcodes)

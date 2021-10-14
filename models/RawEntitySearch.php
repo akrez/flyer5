@@ -11,14 +11,14 @@ use app\models\RawEntity;
  */
 class RawEntitySearch extends RawEntity
 {
-
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'entityId', 'qty', 'rawId'], 'integer'],
+            [['id', 'qty', 'rawId'], 'integer'],
+            [['entityBarcode'], 'safe'],
         ];
     }
 
@@ -38,9 +38,9 @@ class RawEntitySearch extends RawEntity
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $newModel, $parentModel)
+    public function search($params, $parentModel)
     {
-        $query = RawEntity::find()->where(['entityId' => $parentModel->id])->with('raw');
+        $query = RawEntity::validQuery($parentModel->barcode)->with('raw');
 
         // add conditions that should always apply here
 
@@ -61,12 +61,12 @@ class RawEntitySearch extends RawEntity
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'entityId' => $this->entityId,
             'qty' => $this->qty,
             'rawId' => $this->rawId,
         ]);
 
+        $query->andFilterWhere(['like', 'entityBarcode', $this->entityBarcode]);
+
         return $dataProvider;
     }
-
 }

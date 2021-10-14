@@ -13,6 +13,9 @@ use app\models\TypeFarvand;
 use app\models\TypeReseller;
 use app\assets\DatepickerAsset;
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
+use app\models\Relation;
+use app\models\RawEntity;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EntitySearch */
@@ -219,7 +222,26 @@ $colspan = count(array_filter($visableAttributes));
                             return Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . $btnClass, 'toggle' => "#row-update-" . $dataProviderModel->barcode]);
                         },
                         'format' => 'raw',
-                    ]
+                    ],
+                    /*
+                    [
+                        'label' => '',
+                        'format' => 'raw',
+                        'filter' => false,
+                        'value' => function ($model, $key, $index, $grid, $form) {
+                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelName(), Url::toRoute(['/relation/index', 'parentId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social']);
+                        },
+                        'footer' => false,
+                    ],
+                    */
+                    [
+                        'label' => '',
+                        'format' => 'raw',
+                        'filter' => false,
+                        'value' => function ($model, $key, $index, $grid) {
+                            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelName(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode, 'data-pjax' => '']), ['class' => 'btn btn-default btn-block btn-social']);
+                        },
+                    ],
                 ],
                 'afterRow' => function ($dataProviderModel) use ($model, $state, $visableAttributes) {
                     $displayStyle = 'display: none;';

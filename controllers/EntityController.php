@@ -8,6 +8,7 @@ use app\models\EntityFarvand;
 use app\models\EntitySearch;
 use app\models\EntityPart;
 use app\models\EntityProperty;
+use app\models\EntityRaw;
 use app\models\EntityReseller;
 use app\models\EntitySamane;
 use Yii;
@@ -54,6 +55,11 @@ class EntityController extends Controller
     public function actionIndexProperty($barcode = null)
     {
         return $this->index($barcode, EntityProperty::getEntityClass());
+    }
+
+    public function actionIndexRaw($barcode = null)
+    {
+        return $this->index($barcode, EntityRaw::getEntityClass());
     }
 
     protected function index($barcode, $entityClass = null)

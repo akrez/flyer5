@@ -7,7 +7,7 @@ use app\models\TypeProperty;
 
 class EntityProperty extends Entity
 {
-    public const BARCODE_MAX = '50510000';
+    public const BARCODE_MAX = '50510001';
 
     public function rules()
     {

@@ -31,6 +31,7 @@ use Throwable;
  * @property string $categoryId
  * @property string|null $parentId
  * @property int $typeId
+ * @property int|null $qty
  *
  * @property Hrm $provider
  * @property Type $type

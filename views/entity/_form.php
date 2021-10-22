@@ -45,6 +45,11 @@ if (empty(mb_strlen($model->barcode))) {
             <?= $form->field($model, 'typeId')->widget(Select2::class, $model::getSelect2FieldConfigType($model)) ?>
         </div>
     <?php } ?>
+    <?php if ($visableAttributes['qty']) { ?>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'qty')->textInput(['class' => 'form-control']) ?>
+        </div>
+    <?php } ?>
 </div>
 
 <div class="row">

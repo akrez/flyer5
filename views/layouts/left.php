@@ -14,6 +14,7 @@ use app\models\TypeProperty;
 use app\models\TypeReseller;
 use app\models\EntityFarvand;
 use app\models\EntityProperty;
+use app\models\EntityRaw;
 use app\models\EntityReseller;
 
 $this->registerCss('
@@ -53,7 +54,7 @@ $this->registerCss('
                     <a href="#"><i class="glyphicon glyphicon-oil"></i><span>مواد خام</span></a>
                     <ul class="treeview-menu" style="right: 49px;">
                         <li><a href="<?= Url::toRoute(['/type/index-raw']) ?>"><?= TypeRaw::modelTitle() ?></a></li>
-                        <li><a href="<?= Url::toRoute(['/rawimported/index']) ?>">مواد اولیه وارد شده</a></li>
+                        <li><a href="<?= Url::toRoute(['/entity/index-raw']) ?>"><?= EntityRaw::modelTitle() ?></a></li>
                     </ul>
                 </li>
 

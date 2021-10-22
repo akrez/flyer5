@@ -90,16 +90,19 @@ $('.entitySubmitatDatepicker, .entityFactoratDatepicker, .entityProductatDatepic
 
 $visableInFarvandAndPart = (in_array($newModel::getCategoryClass(), [TypeFarvand::getCategoryClass(), TypePart::getCategoryClass()]));
 $visableInReseller = (in_array($newModel::getCategoryClass(), [TypeReseller::getCategoryClass()]));
+$visableInRaw = (in_array($newModel::getCategoryClass(), [TypeRaw::getCategoryClass()]));
 $visableAttributes = [
     'qc' => $visableInFarvandAndPart,
     'qa' => $visableInFarvandAndPart,
     'productAt' => $visableInFarvandAndPart,
-    'providerId' => $visableInFarvandAndPart || $visableInReseller,
+    'providerId' => $visableInFarvandAndPart || $visableInReseller || $visableInRaw,
     //
-    'factor' => $visableInReseller,
-    'price' => $visableInReseller,
-    'factorAt' => $visableInReseller,
-    'sellerId' => $visableInReseller,
+    'factor' => $visableInReseller || $visableInRaw,
+    'price' => $visableInReseller || $visableInRaw,
+    'factorAt' => $visableInReseller || $visableInRaw,
+    'sellerId' => $visableInReseller || $visableInRaw,
+    //
+    'qty' => $visableInRaw,
     //
     'barcode' => true,
     'place' => true,
@@ -107,7 +110,8 @@ $visableAttributes = [
     'submitAt' => true,
     'typeId' => true,
     //
-    true
+    '_update' => true,
+    '_rawEntity' => !$visableInRaw,
 ];
 $colspan = count(array_filter($visableAttributes));
 ?>
@@ -131,7 +135,10 @@ $colspan = count(array_filter($visableAttributes));
                     [
                         'attribute' => 'barcode',
                         'visible' => $visableAttributes['barcode'],
-
+                    ],
+                    [
+                        'attribute' => 'qty',
+                        'visible' => $visableAttributes['qty'],
                     ],
                     [
                         'attribute' => 'qc',
@@ -189,7 +196,6 @@ $colspan = count(array_filter($visableAttributes));
                             if ($model->provider) {
                                 return $model->provider->printFullnameAndCode();
                             }
-                            return '';
                         },
                         'filter' => Select2::widget(Hrm::getSelect2FieldConfigProvider($searchModel)),
                         'visible' => $visableAttributes['providerId'],
@@ -197,7 +203,9 @@ $colspan = count(array_filter($visableAttributes));
                     [
                         'attribute' => 'sellerId',
                         'value' => function ($model) {
-                            return $model->seller->printFullnameAndCode();
+                            if ($model->seller) {
+                                return $model->seller->printFullnameAndCode();
+                            }
                         },
                         'filter' => Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)),
                         'visible' => $visableAttributes['sellerId'],
@@ -222,6 +230,7 @@ $colspan = count(array_filter($visableAttributes));
                             return Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . $btnClass, 'toggle' => "#row-update-" . $dataProviderModel->barcode]);
                         },
                         'format' => 'raw',
+                        'visible' => $visableAttributes['_update'],
                     ],
                     /*
                     [
@@ -241,6 +250,7 @@ $colspan = count(array_filter($visableAttributes));
                         'value' => function ($model, $key, $index, $grid) {
                             return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelName(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode, 'data-pjax' => '']), ['class' => 'btn btn-default btn-block btn-social']);
                         },
+                        'visible' => $visableAttributes['_rawEntity'],
                     ],
                 ],
                 'afterRow' => function ($dataProviderModel) use ($model, $state, $visableAttributes) {

@@ -107,11 +107,6 @@ class Type extends ActiveRecord
         return static::class;
     }
 
-    public static function modelName()
-    {
-        return static::modelTitle();
-    }
-
     public static function printCategory($categoryId = null)
     {
         return '';

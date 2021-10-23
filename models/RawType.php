@@ -24,7 +24,7 @@ class RawType extends ActiveRecord
         return 'raw_type';
     }
 
-    public static function modelName()
+    public static function modelTitle()
     {
         return 'مواد اوليه پيش فرض';
     }

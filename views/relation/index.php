@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
-$this->title = $relation::modelName() . ': ' . $model->id . ' (' . $model->type->name . ')';
+$this->title = $relation::modelTitle() . ': ' . $model->id . ' (' . $model->type->name . ')';
 ?>
 
 <?php Pjax::begin(['enablePushState' => true, 'timeout' => 10000, 'id' => 'p0']) ?>

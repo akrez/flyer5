@@ -34,7 +34,7 @@ class Relation extends Entity
         return ['id' => 'بارکد'] + parent::attributeLabels();
     }
 
-    public static function modelName()
+    public static function modelTitle()
     {
         return 'روابط';
     }

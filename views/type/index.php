@@ -16,7 +16,7 @@ use app\models\TypePart;
 use app\models\TypeReseller;
 use kartik\select2\Select2;
 
-$this->title = $newModel::modelName();
+$this->title = $newModel::modelTitle();
 MaskedInputAsset::register($this);
 DatepickerAsset::register($this);
 $this->registerJs('
@@ -237,7 +237,7 @@ if ($newModel::getCategoryClass() != TypeRaw::getCategoryClass()) {
                                 </td>
                                 <?php
                                 if ($rawtype) {
-                                    echo '<td>' . Html::a('<span class="glyphicon glyphicon-list-alt"></span>' . RawType::modelName(), Url::to(['rawtype/index', 'typeId' => $dataProviderModel->id]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => 0]) . '</td>';
+                                    echo '<td>' . Html::a('<span class="glyphicon glyphicon-list-alt"></span>' . RawType::modelTitle(), Url::to(['rawtype/index', 'typeId' => $dataProviderModel->id]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => 0]) . '</td>';
                                 }
                                 ?>
                             </tr>

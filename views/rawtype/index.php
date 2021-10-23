@@ -12,7 +12,7 @@ use yii\helpers\Url;
 use yii\grid\GridViewAsset;
 use yii\helpers\HtmlPurifier;
 
-$this->title = $newModel::modelName() . ': ' . $parentModel->name . ' (' . $parentModel->shortname . ')';
+$this->title = $newModel::modelTitle() . ': ' . $parentModel->name . ' (' . $parentModel->shortname . ')';
 GridViewAsset::register($this);
 
 $sort = $dataProvider->sort;

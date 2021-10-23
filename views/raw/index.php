@@ -4,7 +4,7 @@ use app\components\TableView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = $newModel::modelName();
+$this->title = $newModel::modelTitle();
 ?>
 
 <h1 class="pb20"><?= Html::encode($this->title) ?></h1>

@@ -13,7 +13,7 @@ use yii\helpers\Url;
 use yii\grid\GridViewAsset;
 use yii\helpers\HtmlPurifier;
 
-$this->title = $newModel::modelName() . ': ' . $parentModel->barcode;
+$this->title = $newModel::modelTitle() . ': ' . $parentModel->barcode;
 
 $this->registerCss("
 .table th {

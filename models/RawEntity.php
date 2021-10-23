@@ -29,7 +29,7 @@ class RawEntity extends ActiveRecord
         return 'raw_entity';
     }
 
-    public static function modelName()
+    public static function modelTitle()
     {
         return 'مواد اوليه';
     }

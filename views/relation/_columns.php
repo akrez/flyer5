@@ -102,7 +102,7 @@ return [
         'format' => 'raw',
         'contentOptions' => ["style" => "padding: 0px 4px;vertical-align: middle;"],
         'value' => function ($model) {
-            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelName(), Url::toRoute(['/relation/index', 'parentId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social btn-sm']);
+            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelTitle(), Url::toRoute(['/relation/index', 'parentId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social btn-sm']);
         },
         'visible' => in_array('Relation', $visible),
     ],
@@ -110,7 +110,7 @@ return [
         'format' => 'raw',
         'contentOptions' => ["style" => "padding: 0px 4px;vertical-align: middle;"],
         'value' => function ($model) {
-            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelName(), Url::toRoute(['/rawentity/index', 'entityId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social btn-sm']);
+            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelTitle(), Url::toRoute(['/rawentity/index', 'entityId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social btn-sm']);
         },
         'visible' => in_array('RawEntity', $visible),
     ],

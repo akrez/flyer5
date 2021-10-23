@@ -39,7 +39,7 @@ class Hrm extends ActiveRecord
         5 => 'پیمانکار',
     ];
 
-    public static function modelName()
+    public static function modelTitle()
     {
         return 'منابع انسانی';
     }

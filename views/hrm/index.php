@@ -12,7 +12,7 @@ use yii\grid\GridViewAsset;
 use yii\helpers\HtmlPurifier;
 use app\assets\DatepickerAsset;
 
-$this->title = $newModel::modelName();
+$this->title = $newModel::modelTitle();
 MaskedInputAsset::register($this);
 DatepickerAsset::register($this);
 GridViewAsset::register($this);

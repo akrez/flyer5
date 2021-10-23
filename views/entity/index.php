@@ -12,6 +12,7 @@ use app\models\TypePart;
 use app\models\TypeFarvand;
 use app\models\TypeReseller;
 use app\assets\DatepickerAsset;
+use app\models\Entity;
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 use app\models\Relation;
@@ -109,6 +110,8 @@ $visableAttributes = [
     'des' => true,
     'submitAt' => true,
     'typeId' => true,
+    //
+    'parentBarcode' => !$visableInRaw,
     //
     '_update' => true,
     '_rawEntity' => !$visableInRaw,
@@ -222,6 +225,17 @@ $colspan = count(array_filter($visableAttributes));
                         'visible' => $visableAttributes['typeId'],
                     ],
                     [
+                        'attribute' => 'parentBarcode',
+                        'value' => function ($model) {
+                            if ($model->parentBarcode) {
+                                return $model->parent->barcode;
+                            }
+                        },
+                        'filter' => Select2::widget(Entity::getSelect2FieldConfigParent($searchModel)),
+                        'contentOptions' => ['class' => 'warning'],
+                        'visible' => $visableAttributes['parentBarcode'],
+                    ],
+                    [
                         'value' => function ($dataProviderModel) use ($model, $state) {
                             $btnClass = ' btn-default ';
                             if ($model && $model->barcode == $dataProviderModel->barcode && $state == 'update') {
@@ -238,7 +252,7 @@ $colspan = count(array_filter($visableAttributes));
                         'format' => 'raw',
                         'filter' => false,
                         'value' => function ($model, $key, $index, $grid, $form) {
-                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelName(), Url::toRoute(['/relation/index', 'parentId' => $model->id]), ['class' => 'btn btn-default btn-block btn-social']);
+                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelName(), Url::toRoute(['/relation/index', 'parentBarcode' => $model->id]), ['class' => 'btn btn-default btn-block btn-social']);
                         },
                         'footer' => false,
                     ],

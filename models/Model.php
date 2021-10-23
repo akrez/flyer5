@@ -58,7 +58,7 @@ class Model extends BaseModel
             'qc' => 'Qc',
             'qa' => 'Qa',
             'productAt' => 'تاریخ تولید',
-            'parentId' => 'Parent Id',
+            'parentBarcode' => 'والد',
             'typeId' => 'نوع',
             //
             'entityId' => 'موجودیت',

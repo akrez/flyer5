@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Entity;
 use app\models\Hrm;
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -48,6 +49,11 @@ if (empty(mb_strlen($model->barcode))) {
     <?php if ($visableAttributes['qty']) { ?>
         <div class="col-sm-3">
             <?= $form->field($model, 'qty')->textInput(['class' => 'form-control']) ?>
+        </div>
+    <?php } ?>
+    <?php if ($visableAttributes['parentBarcode']) { ?>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'parentBarcode')->widget(Select2::class, Entity::getSelect2FieldConfigParent($model)) ?>
         </div>
     <?php } ?>
 </div>

@@ -11,6 +11,7 @@ use app\models\EntityProperty;
 use app\models\EntityRaw;
 use app\models\EntityReseller;
 use app\models\EntitySamane;
+use app\models\TypeRaw;
 use Yii;
 
 class EntityController extends Controller
@@ -21,12 +22,28 @@ class EntityController extends Controller
             [
                 'actions' => [
                     'index-farvand', 'index-raw', 'index-samane', 'index-part', 'index-reseller', 'index-property',
+                    'suggest',
                 ],
                 'allow' => true,
                 'verbs' => ['POST', 'GET'],
                 'roles' => ['@'],
             ],
         ]);
+    }
+
+    public function actionSuggest()
+    {
+        $barcode = Yii::$app->request->get('term');
+        $results = [];
+        $databaseResults = Entity::validQuery()
+            ->where(['<>', 'typeId', TypeRaw::getCategoryClass()])
+            ->andFilterWhere(['LIKE', 'barcode', $barcode])
+            ->with('parent')
+            ->all();
+        foreach ($databaseResults as $databaseResult) {
+            $results[] = ['id' => $databaseResult->barcode, 'text' => $databaseResult->barcode];
+        }
+        return $this->asJson(['results' => $results]);
     }
 
     /*

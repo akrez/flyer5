@@ -12,6 +12,7 @@ use app\models\ActiveRecord;
 use Yii;
 use Exception;
 use Throwable;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "entity".
@@ -29,7 +30,7 @@ use Throwable;
  * @property string $barcode
  * @property string|null $productAt
  * @property string $categoryId
- * @property string|null $parentId
+ * @property string|null $parentBarcode
  * @property int $typeId
  * @property int|null $qty
  *
@@ -70,7 +71,7 @@ class Entity extends ActiveRecord
         return [
             [['barcode', 'categoryId', 'typeId'], 'required'],
             [['qc', 'qa', 'price', 'providerId', 'sellerId', 'typeId', 'count'], 'integer'],
-            [['barcode', 'parentId'], 'string', 'max' => 11],
+            [['barcode', 'parentBarcode'], 'string', 'max' => 11],
             [['factor'], 'string', 'max' => 63],
             [['des'], 'string', 'max' => 255],
             [['place', 'submitAt', 'factorAt', 'productAt'], 'string', 'max' => 19],
@@ -78,9 +79,9 @@ class Entity extends ActiveRecord
             [['barcode'], 'unique'],
             [['providerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['providerId' => 'id']],
             [['sellerId'], 'exist', 'skipOnError' => true, 'targetClass' => Hrm::class, 'targetAttribute' => ['sellerId' => 'id']],
-            [['parentId'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['parentId' => 'barcode']],
+            [['parentBarcode'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['parentBarcode' => 'barcode']],
             //
-            [['parentId'], 'compare', 'operator' => '!=', 'compareAttribute' => 'id'],
+            [['parentBarcode'], 'compare', 'operator' => '!=', 'compareAttribute' => 'barcode'],
             [['submitAt', 'factorAt', 'productAt'], 'validateDate'],
             [['submitAt', 'factorAt', 'productAt'], 'match', 'pattern' => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/'],
         ];
@@ -150,6 +151,17 @@ class Entity extends ActiveRecord
         ]);
     }
 
+    public static function getSelect2FieldConfigParent($model)
+    {
+        $id = Html::getInputId($model, 'parentBarcode') . '-' . $model->barcode . '-' . $model->parentBarcode;
+        //
+        return Helper::getSelect2FieldConfig($model, 'parentBarcode', Url::to(['/entity/suggest/']), [
+            'data' => ($model->parentBarcode && $model->parent ? [$model->parent->barcode => $model->parent->barcode] : []),
+            'placeholder' => '',
+            'id' => $id,
+        ]);
+    }
+
     /**
      * Gets query for [[Provider]].
      *
@@ -187,7 +199,7 @@ class Entity extends ActiveRecord
      */
     public function getParent()
     {
-        return $this->hasOne(Entity::class, ['id' => 'parentId']);
+        return $this->hasOne(Entity::class, ['barcode' => 'parentBarcode']);
     }
 
     /**
@@ -197,7 +209,7 @@ class Entity extends ActiveRecord
      */
     public function getEntities()
     {
-        return $this->hasMany(Entity::class, ['parentId' => 'id']);
+        return $this->hasMany(Entity::class, ['parentBarcode' => 'barcode']);
     }
 
     public static function batchInsert($newModel, $barcodes)

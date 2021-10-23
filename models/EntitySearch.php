@@ -13,7 +13,7 @@ class EntitySearch extends Entity
     {
         return [
             [['qc', 'qa', 'providerId', 'sellerId', 'typeId', 'price'], 'integer'],
-            [['barcode', 'factor', 'des', 'place', 'submitAt', 'factorAt', 'productAt'], 'safe'],
+            [['barcode', 'factor', 'des', 'place', 'submitAt', 'factorAt', 'productAt', 'parentBarcode'], 'safe'],
         ];
     }
 
@@ -59,7 +59,6 @@ class EntitySearch extends Entity
             'qc' => $this->qc,
             'qa' => $this->qa,
             'providerId' => $this->providerId,
-            'parentId' => $this->parentId,
             'sellerId' => $this->sellerId,
             'typeId' => $this->typeId,
         ]);
@@ -69,6 +68,7 @@ class EntitySearch extends Entity
             ->andFilterWhere(['like', 'des', $this->des])
             ->andFilterWhere(['like', 'submitAt', $this->submitAt])
             ->andFilterWhere(['like', 'factorAt', $this->factorAt])
+            ->andFilterWhere(['like', 'parentBarcode', $this->parentBarcode])
             ->andFilterWhere(['like', 'productAt', $this->productAt]);
 
         return $dataProvider;

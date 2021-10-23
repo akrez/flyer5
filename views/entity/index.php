@@ -13,6 +13,7 @@ use app\models\TypeFarvand;
 use app\models\TypeReseller;
 use app\assets\DatepickerAsset;
 use app\models\Entity;
+use app\models\EntityLog;
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 use app\models\Relation;
@@ -113,6 +114,7 @@ $visableAttributes = [
     //
     'parentBarcode' => !$visableInRaw,
     //
+    '_entityLog' => !$visableInRaw,
     '_update' => true,
     '_rawEntity' => !$visableInRaw,
 ];
@@ -246,23 +248,22 @@ $colspan = count(array_filter($visableAttributes));
                         'format' => 'raw',
                         'visible' => $visableAttributes['_update'],
                     ],
-                    /*
-                    [
-                        'label' => '',
-                        'format' => 'raw',
-                        'filter' => false,
-                        'value' => function ($model, $key, $index, $grid, $form) {
-                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . Relation::modelName(), Url::toRoute(['/relation/index', 'parentBarcode' => $model->id]), ['class' => 'btn btn-default btn-block btn-social']);
-                        },
-                        'footer' => false,
-                    ],
-                    */
                     [
                         'label' => '',
                         'format' => 'raw',
                         'filter' => false,
                         'value' => function ($model, $key, $index, $grid) {
-                            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelName(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode, 'data-pjax' => '']), ['class' => 'btn btn-default btn-block btn-social']);
+                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . EntityLog::modelTitle(), Url::toRoute(['/entity-log/index', 'entityBarcode' => $model->barcode]), ['class' => 'btn btn-default btn-block btn-social']);
+                        },
+                        'footer' => false,
+                        'visible' => $visableAttributes['_entityLog'],
+                    ],
+                    [
+                        'label' => '',
+                        'format' => 'raw',
+                        'filter' => false,
+                        'value' => function ($model, $key, $index, $grid) {
+                            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelTitle(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode, 'data-pjax' => '']), ['class' => 'btn btn-default btn-block btn-social']);
                         },
                         'visible' => $visableAttributes['_rawEntity'],
                     ],

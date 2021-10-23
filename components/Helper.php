@@ -89,6 +89,9 @@ class Helper extends Component
         }
         //
         $newModel->setAttributes($staticAttributes, false);
+        if ($newModel->hasAttribute('parentBarcode') && !mb_strlen($newModel->parentBarcode)) {
+            $newModel->parentBarcode = null;
+        }
         $isNewRecord = $newModel->isNewRecord;
         $isSuccessful = $newModel->save();
         //

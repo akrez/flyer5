@@ -43,6 +43,9 @@ class Model extends BaseModel
             'categoryId' => 'دسته‌بندی',
             'parentId' => 'دسته‌بندی',
             //
+            'oldValue' => 'مقدار قبلی',
+            'newValue' => 'مقدار جدید',
+            //
             'qty' => 'مقدار',
             'rawId' => 'ماده خام',
             'place' => 'مکان',

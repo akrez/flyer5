@@ -221,12 +221,16 @@ class Entity extends ActiveRecord
             foreach ($barcodes as $barcode) {
                 $row = [];
                 foreach ($columns as $columnIndex => $column) {
-                    if ($column == 'barcode') {
-                        $row[$columnIndex] = $barcode;
-                    } elseif ($column == 'categoryId') {
-                        $row[$columnIndex] = $newModel::getCategoryClass();
+                    if (mb_strlen($attibutes[$column])) {
+                        if ($column == 'barcode') {
+                            $row[$columnIndex] = $barcode;
+                        } elseif ($column == 'categoryId') {
+                            $row[$columnIndex] = $newModel::getCategoryClass();
+                        } else {
+                            $row[$columnIndex] = $attibutes[$column];
+                        }
                     } else {
-                        $row[$columnIndex] = $attibutes[$column];
+                        $row[$columnIndex] = null;
                     }
                 }
                 $rows[] = $row;

@@ -7,15 +7,13 @@ use app\widgets\Alert;
 use app\models\TypeRaw;
 use yii\widgets\LinkPager;
 use kartik\select2\Select2;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridViewAsset;
 use yii\helpers\HtmlPurifier;
 
 $this->title = $newModel::modelName() . ': ' . $parentModel->barcode;
-GridViewAsset::register($this);
-
-$sort = $dataProvider->sort;
 
 $this->registerCss("
 .table th {
@@ -27,13 +25,6 @@ $this->registerCss("
 ");
 
 $this->registerJs("
-function applyFilter() { 
-    $('#table').yiiGridView(" . json_encode([
-    'filterUrl' => Url::current(['entityBarcode' => $parentModel->barcode]),
-    'filterSelector' => '#table-filters input, #table-filters select',
-    'filterOnFocusOut' => true,
-]) . ");
-}
 $(document).on('click','.btn[toggle]',function() {
 
     var btn = $(this);
@@ -61,31 +52,17 @@ $(document).on('pjax:beforeSend', function(xhr, options) {
 $(document).on('pjax:complete', function(xhr, textStatus, options) {
     $('.ajax-splash-show').css('display','none');
     $('.ajax-splash-hide').css('display','inline-block');
-    applyFilter();
 });
-
-applyFilter();
 ", View::POS_READY);
 ?>
 
 <h3 class="pb20"><?= Html::encode($this->title) ?></h3>
-
 <?php
 Pjax::begin([
     'id' => "hrm-pjax",
     'timeout' => false,
     'enablePushState' => false,
 ]);
-
-$this->registerJs("
-$('#table').yiiGridView(" . json_encode([
-    'filterUrl' => Url::current(['entityBarcode' => $parentModel->barcode, 'RawEntitySearch' => null,]),
-    'filterSelector' => '#table-filters input, #table-filters select',
-    'filterOnFocusOut' => true,
-]) . ");
-");
-
-$colspan = 6;
 ?>
 <div class="row">
     <div class="col-sm-12">
@@ -97,81 +74,61 @@ $colspan = 6;
         <div class="panel panel-primary" style="position: relative;">
             <div class="ajax-splash-show splash-style"></div>
             <div class="panel-heading"><?= Html::encode($this->title) ?></div>
-            <table id="table" class="table table-bordered table-striped">
-                <thead>
-                    <tr class="info">
-                        <?php
-                        echo '<th>' . $sort->link('id', ['label' => $newModel->getAttributeLabel('id')]) . '</th>';
-                        echo '<th>' . $sort->link('rawId', ['label' => $newModel->getAttributeLabel('rawId')]) . '</th>';
-                        echo '<th>' . $sort->link('qty', ['label' => $newModel->getAttributeLabel('qty')]) . '</th>';
-                        ?>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    <tr id="table-filters" class="info">
-                        <?php
-                        echo '<th>' . Html::activeInput('id', $searchModel, 'id', ['class' => 'form-control']) . '</th>';
-                        echo '<th>' . Select2::widget(TypeRaw::getSelect2FieldConfigRaw($searchModel)) . '</th>';
-                        echo '<th>' . Html::activeInput('qty', $searchModel, 'qty', ['class' => 'form-control']) . '</th>';
-                        ?>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($dataProvider->getModels()) { ?>
-                        <?php
-                        foreach ($dataProvider->getModels() as $dataProviderModelKey => $dataProviderModel) :
-                            $displayState = '';
-                            if ($model && $model->id == $dataProviderModel->id) {
-                                $displayState = $state;
-                                $dataProviderModel = $model;
+            <?php
+            echo GridView::widget([
+                'layout' => '{items}',
+                'tableOptions' => ['style' => 'margin-bottom: 0px', 'class' => 'table table-bordered table-striped'],
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    [
+                        'attribute' => 'rawId',
+                        'value' => function ($model) {
+                            if ($model->raw) {
+                                return $model->raw->printNameAndUnit();
                             }
-                        ?>
-                            <tr class="active">
-                                <?php
-                                echo '<td>' . HtmlPurifier::process($dataProviderModel->id) . '</td>';
-                                echo '<td>' . ($dataProviderModel->raw ? $dataProviderModel->raw->printNameAndUnit() : '') . '</td>';
-                                echo '<td>' . HtmlPurifier::process($dataProviderModel->qty) . '</td>';
-                                ?>
-                                <td>
-                                    <?= Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . ($displayState == 'update' ? ' btn-warning ' : ' btn-default '), 'toggle' => "#row-update-" . $dataProviderModel->id]) ?>
-                                </td>
-                                <td>
-                                    <?= Html::a(' <span class="glyphicon glyphicon-trash"></span> ' . Yii::t('app', 'Remove'), Url::current(['id' => $dataProviderModel->id, 'entityBarcode' => $dataProviderModel->entityBarcode, 'state' => 'remove']), [
-                                        'data-pjax' => 1,
-                                        'class' => 'btn btn-danger btn-block btn-social',
-                                        'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-                                    ]) ?>
-                                </td>
-                            </tr>
-                            <?php
-                            $displayStyle = 'display: none;';
-                            if ($model && $model->id == $dataProviderModel->id) {
-                                $dataProviderModel = $model;
-                                $displayStyle = 'display: table-row;';
+                        },
+                        'filter' => Select2::widget(TypeRaw::getSelect2FieldConfigRaw($searchModel)),
+                    ],
+                    'qty',
+                    'des',
+                    [
+                        'value' => function ($dataProviderModel) use ($model, $state) {
+                            $btnClass = ' btn-default ';
+                            if ($model && $model->id == $dataProviderModel->id && $state == 'update') {
+                                $btnClass = ' btn-warning ';
                             }
-                            ?>
-                            <tr style="<?= $displayStyle ?>" id="<?= "row-update-" . $dataProviderModel->id ?>">
-                                <td colspan="<?= $colspan ?>">
-                                    <?= $this->render('_form', ['model' => $dataProviderModel, 'parentModel' => $parentModel]) ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php } else { ?>
-                        <tr class="danger">
-                            <td colspan="<?= $colspan ?>">
-                                <?= Yii::t('yii', 'No results found.') ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <tr class="success">
-                        <td colspan="<?= $colspan ?>">
-                            <?= $this->render('_form', ['model' => $newModel, 'parentModel' => $parentModel]) ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            return Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . $btnClass, 'toggle' => "#row-update-" . $dataProviderModel->id]);
+                        },
+                        'format' => 'raw',
+                    ],
+                ],
+                'afterRow' => function ($dataProviderModel) use ($model, $state, $parentModel) {
+                    $displayStyle = 'display: none;';
+                    if ($model && $model->id == $dataProviderModel->id) {
+                        $dataProviderModel = $model;
+                        $displayStyle = 'display: table-row;';
+                    }
+                    //
+                    ob_start();
+                    echo $this->render('_form', ['model' => $dataProviderModel, 'parentModel' => $parentModel]);
+                    $formContent = ob_get_contents();
+                    ob_end_clean();
+                    //
+                    return Html::beginTag('tr', [
+                        'style' => $displayStyle,
+                        'id' => "row-update-" . $dataProviderModel->id,
+                    ]) . '<td colspan="16"> ' . $formContent . ' </td></tr>';
+                },
+            ]);
+            ?>
+            <div class="panel-footer panel-success" style="padding: 8px;">
+                <?= $this->render('_form', [
+                    'model' => $newModel,
+                    'parentModel' => $parentModel,
+                ]);
+                ?>
+            </div>
         </div>
     </div>
 </div>
@@ -182,5 +139,5 @@ echo LinkPager::widget([
         'class' => 'pagination',
     ]
 ]);
+Pjax::end();
 ?>
-<?php Pjax::end(); ?>

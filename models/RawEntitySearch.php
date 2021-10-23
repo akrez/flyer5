@@ -18,7 +18,7 @@ class RawEntitySearch extends RawEntity
     {
         return [
             [['id', 'qty', 'rawId'], 'integer'],
-            [['entityBarcode'], 'safe'],
+            [['entityBarcode', 'des'], 'safe'],
         ];
     }
 
@@ -66,6 +66,7 @@ class RawEntitySearch extends RawEntity
         ]);
 
         $query->andFilterWhere(['like', 'entityBarcode', $this->entityBarcode]);
+        $query->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
     }

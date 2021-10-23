@@ -25,6 +25,9 @@ $form = ActiveForm::begin([
     <div class="col-sm-3">
         <?= $form->field($model, 'qty')->textInput(['maxlength' => true]) ?>
     </div>
+    <div class="col-sm-6">
+        <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
+    </div>
 </div>
 
 <div class="row">

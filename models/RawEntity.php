@@ -15,6 +15,7 @@ use Yii;
  * @property int $id
  * @property string $entityBarcode
  * @property int $qty
+ * @property string|null $des
  * @property int $rawId
  *
  * @property Entity $entity
@@ -39,6 +40,7 @@ class RawEntity extends ActiveRecord
             [['rawId'], 'required'],
             [['rawId'], 'integer'],
             [['qty'], 'double', 'min' => 0],
+            [['des'], 'string', 'max' => 256],
             [['entityBarcode'], 'exist', 'skipOnError' => true, 'targetClass' => Entity::class, 'targetAttribute' => ['entityBarcode' => 'barcode']],
             [['rawId'], 'exist', 'skipOnError' => true, 'targetClass' => Type::class, 'targetAttribute' => ['rawId' => 'id']],
         ];

@@ -13,9 +13,9 @@ use Yii;
  * @property string|null $oldValue
  * @property string|null $newValue
  * @property string|null $des
- * @property string $parentBarcode
+ * @property string $entityBarcode
  *
- * @property Entity $parent
+ * @property Entity $entity
  */
 class EntityLog extends ActiveRecord
 {
@@ -43,12 +43,12 @@ class EntityLog extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Parent]].
+     * Gets query for [[Entity]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getParent()
+    public function getEntity()
     {
-        return $this->hasOne(Entity::class, ['barcode' => 'parentBarcode']);
+        return $this->hasOne(Entity::class, ['barcode' => 'entityBarcode']);
     }
 }

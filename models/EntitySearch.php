@@ -41,7 +41,7 @@ class EntitySearch extends Entity
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => ['defaultOrder' => ['barcode' => SORT_DESC,]],
-            'pagination' => ['pagesize' => 20,]
+            'pagination' => ['pagesize' => 5,]
         ]);
 
         $this->load($params);

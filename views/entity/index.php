@@ -253,7 +253,7 @@ $colspan = count(array_filter($visableAttributes));
                         'format' => 'raw',
                         'filter' => false,
                         'value' => function ($model, $key, $index, $grid) {
-                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . EntityLog::modelTitle(), Url::toRoute(['/entity-log/index', 'entityBarcode' => $model->barcode]), ['class' => 'btn btn-default btn-block btn-social']);
+                            return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . EntityLog::modelTitle(), Url::toRoute(['/entity-log/index', 'entityBarcode' => $model->barcode]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => '0']);
                         },
                         'footer' => false,
                         'visible' => $visableAttributes['_entityLog'],
@@ -263,7 +263,7 @@ $colspan = count(array_filter($visableAttributes));
                         'format' => 'raw',
                         'filter' => false,
                         'value' => function ($model, $key, $index, $grid) {
-                            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelTitle(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode, 'data-pjax' => '']), ['class' => 'btn btn-default btn-block btn-social']);
+                            return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelTitle(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => '0']);
                         },
                         'visible' => $visableAttributes['_rawEntity'],
                     ],

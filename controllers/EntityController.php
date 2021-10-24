@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\Helper;
 use app\models\Entity;
 use app\models\EntityFarvand;
+use app\models\EntityLog;
 use app\models\EntitySearch;
 use app\models\EntityPart;
 use app\models\EntityProperty;
@@ -16,6 +17,8 @@ use Yii;
 
 class EntityController extends Controller
 {
+    public static $entityLogAttributes = ['qc', 'qa', 'place',];
+
     public function behaviors()
     {
         return $this->defaultBehaviors([
@@ -90,6 +93,7 @@ class EntityController extends Controller
         //
         if ($barcode) {
             $model = Helper::findOrFail($entityClass::validQuery()->andWhere(['barcode' => $barcode]));
+            $modelOld = clone $model;
         } else {
             $model = null;
         }
@@ -122,6 +126,13 @@ class EntityController extends Controller
             $updateCacheNeeded = Helper::delete($model);
         }
         if ($updateCacheNeeded) {
+            foreach (self::$entityLogAttributes as $logAttribute) {
+                if ($state == 'update') {
+                    EntityLog::log($logAttribute, $model, $modelOld);
+                } elseif ($state == 'save') {
+                    EntityLog::log($logAttribute, $newModel);
+                }
+            }
             $newModel = new $entityClass();
         }
         //

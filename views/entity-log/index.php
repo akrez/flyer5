@@ -81,6 +81,16 @@ Pjax::begin([
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => [
+                    'createdAt',
+                    'updatedAt',
+                    'oldValue',
+                    'newValue',
+                    [
+                        'attribute' => 'entityAttribute',
+                        'value' => function ($model, $key, $index, $grid) {
+                            return $model->getAttributeLabel($model->entityAttribute);
+                        },
+                    ],
                     'des',
                     [
                         'value' => function ($dataProviderModel) use ($model, $state) {
@@ -116,11 +126,5 @@ Pjax::begin([
     </div>
 </div>
 <?php
-echo LinkPager::widget([
-    'pagination' => $dataProvider->getPagination(),
-    'options' => [
-        'class' => 'pagination',
-    ]
-]);
 Pjax::end();
 ?>

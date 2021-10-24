@@ -46,6 +46,8 @@ class Model extends BaseModel
             'oldValue' => 'مقدار قبلی',
             'newValue' => 'مقدار جدید',
             //
+            'entityAttribute' => 'ویژگی',
+            //
             'qty' => 'مقدار',
             'rawId' => 'ماده خام',
             'place' => 'مکان',

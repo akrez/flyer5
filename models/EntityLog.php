@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string|null $updatedAt
  * @property string|null $createdAt
+ * @property string $entityAttribute
  * @property string|null $oldValue
  * @property string|null $newValue
  * @property string|null $des
@@ -40,6 +41,27 @@ class EntityLog extends ActiveRecord
     public static function modelTitle()
     {
         return 'تاریخچه تغییرات';
+    }
+
+    public static function validQuery($id = null, $entityBarcode = null)
+    {
+        $query = static::find();
+        $query->andFilterWhere(['id' => $id]);
+        $query->andFilterWhere(['entityBarcode' => $entityBarcode]);
+        return $query;
+    }
+
+    public static function log($entityAttribute, $newModel, $oldModel = null)
+    {
+        if ($newModel->{$entityAttribute} != $oldModel->{$entityAttribute}) {
+            $entityLog = new EntityLog();
+            $entityLog->oldValue = ($oldModel ? $oldModel->{$entityAttribute} : null);
+            $entityLog->newValue = $newModel->{$entityAttribute};
+            $entityLog->entityBarcode = $newModel->barcode;
+            $entityLog->entityAttribute = $entityAttribute;
+            return $entityLog->save();
+        }
+        return null;
     }
 
     /**

@@ -110,14 +110,7 @@ class EntityController extends Controller
             if ($duplicateBarcodes) {
                 Yii::$app->session->setFlash('danger', 'این بارکدها تکراری هستند: ' . implode(' , ', $duplicateBarcodes));
             } else {
-                $transaction = Yii::$app->db->beginTransaction();
                 $updateCacheNeeded = Entity::batchInsert($newModel, $barcodes);
-                if ($updateCacheNeeded) {
-                    $transaction->commit();
-                    $newModel = new $entityClass();
-                } else {
-                    $transaction->rollBack();
-                }
             }
         } elseif ($state == 'update' && $model) {
             $updateCacheNeeded = Helper::store($model, $post, [
@@ -127,12 +120,12 @@ class EntityController extends Controller
             $updateCacheNeeded = Helper::delete($model);
         }
         if ($updateCacheNeeded) {
-            foreach (self::$entityLogAttributes as $logAttribute) {
-                if ($state == 'update') {
+            if ($state == 'update') {
+                foreach (self::$entityLogAttributes as $logAttribute) {
                     EntityLog::log($logAttribute, $model, $modelOld);
-                } elseif ($state == 'save') {
-                    EntityLog::log($logAttribute, $newModel);
                 }
+            } elseif ($state == 'save') {
+                $newModel = new $entityClass();
             }
             $newModel = new $entityClass();
         }

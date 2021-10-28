@@ -32,15 +32,19 @@ class EntitySearch extends Entity
      */
     public function search($params, $categoryClass = null, $pagesize = 5)
     {
-        $instanceModel = new $categoryClass();
-        $query = $instanceModel::find()
-            ->andWhere(['categoryId' => $instanceModel::getCategoryClass()])
-            ->with('parent')->with('type')->with('provider')->with('seller');
+        if ($categoryClass) {
+            $instanceModel = new $categoryClass();
+            $categoryId = $instanceModel::getCategoryClass();
+            $query = $instanceModel::validQuery($categoryId);
+        } else {
+            $query = Entity::validQuery();
+        }
+        $query->with('parent')->with('type')->with('provider')->with('seller');
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['barcode' => SORT_DESC,]],
+            'sort' => ['defaultOrder' => ['createdAt' => SORT_DESC,]],
             'pagination' => ['pagesize' => $pagesize,]
         ]);
 

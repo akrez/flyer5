@@ -35,6 +35,7 @@ class EntityFarvand extends Entity
     {
         return [
             'typeId' => 'فروند',
+            'providerId' => 'سازنده',
         ] + parent::attributeLabels();
     }
 

@@ -8,6 +8,7 @@ use yii\helpers\Html;
 use app\models\RawType;
 use app\models\RawEntity;
 use app\components\Helper;
+use app\components\Jdf;
 use app\models\ActiveRecord;
 use Yii;
 use Exception;
@@ -34,12 +35,16 @@ use yii\helpers\Url;
  * @property string|null $parentBarcode
  * @property int $typeId
  * @property int|null $qty
+ * @property string|null $updatedAt
+ * @property string|null $createdAt
  *
  * @property Hrm $provider
  * @property Type $type
  * @property Hrm $seller
  * @property Entity $parent
  * @property Entity[] $entities
+ * @property EntityLog[] $entityLogs
+ * @property RawEntity[] $rawEntities
  */
 class Entity extends ActiveRecord
 {
@@ -215,6 +220,8 @@ class Entity extends ActiveRecord
 
     public static function batchInsert($newModel, $barcodes)
     {
+        $modifyAt = Jdf::jdate('Y-m-d H:i:s');
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $attibutes = $newModel->attributes;
             $columns = array_keys($attibutes);
@@ -222,26 +229,31 @@ class Entity extends ActiveRecord
             foreach ($barcodes as $barcode) {
                 $row = [];
                 foreach ($columns as $columnIndex => $column) {
-                    if (mb_strlen($attibutes[$column])) {
-                        if ($column == 'barcode') {
-                            $row[$columnIndex] = $barcode;
-                        } elseif ($column == 'categoryId') {
-                            $row[$columnIndex] = $newModel::getCategoryClass();
-                        } else {
-                            $row[$columnIndex] = $attibutes[$column];
-                        }
+                    if ($column == 'barcode') {
+                        $row[$columnIndex] = $barcode;
+                    } elseif ($column == 'categoryId') {
+                        $row[$columnIndex] = $newModel::getCategoryClass();
+                    } elseif ($column == 'createdAt' || $column == 'updatedAt') {
+                        $row[$columnIndex] = $modifyAt;
+                    } elseif (mb_strlen($attibutes[$column])) {
+                        $row[$columnIndex] = $attibutes[$column];
                     } else {
                         $row[$columnIndex] = null;
                     }
                 }
                 $rows[] = $row;
             }
-            return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $columns, $rows)->execute() && RawEntity::batchInsert($newModel, $barcodes);
+            $status = Yii::$app->db->createCommand()->batchInsert(self::tableName(), $columns, $rows)->execute() && RawEntity::batchInsert($newModel, $barcodes);
+            if ($status) {
+                $transaction->commit();
+                return true;
+            }
         } catch (Throwable $ex) {
             Yii::$app->session->setFlash('danger', $ex->getMessage());
         } catch (Exception $ex) {
             Yii::$app->session->setFlash('danger', $ex->getMessage());
         }
+        $transaction->rollBack();
         return false;
     }
 
@@ -360,6 +372,16 @@ class Entity extends ActiveRecord
                 },
                 'filter' => Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)),
                 'visible' => !isset($visableAttributes['sellerId']) || $visableAttributes['sellerId'],
+            ],
+            [
+                'attribute' => 'createdAt',
+                'visible' => !isset($visableAttributes['createdAt']) || $visableAttributes['createdAt'],
+
+            ],
+            [
+                'attribute' => 'updatedAt',
+                'visible' => !isset($visableAttributes['updatedAt']) || $visableAttributes['updatedAt'],
+
             ],
             [
                 'attribute' => 'des',

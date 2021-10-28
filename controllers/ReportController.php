@@ -6,7 +6,9 @@ use app\models\Entity;
 use app\components\Helper;
 use app\models\EntityLog;
 use app\models\EntityLogSearch;
+use app\models\EntitySearch;
 use app\models\RawEntitySearch;
+use Yii;
 
 class ReportController extends Controller
 {
@@ -14,11 +16,24 @@ class ReportController extends Controller
     {
         return $this->defaultBehaviors([
             [
-                'actions' => ['index'],
+                'actions' => ['index', 'entity',],
                 'allow' => true,
                 'verbs' => ['POST', 'GET'],
                 'roles' => ['@'],
             ],
+        ]);
+    }
+
+    public function actionEntity()
+    {
+        $entitySearch = new EntitySearch();
+        $entitySearchProvider = $entitySearch->search(Yii::$app->request->queryParams, null, 10000);
+        $entitySearchProvider->query->orderBy(['createdAt' => SORT_DESC,]);
+        //
+        return $this->render('entity', [
+            'entitySearch' => $entitySearch,
+            'entitySearchProvider' => $entitySearchProvider,
+
         ]);
     }
 

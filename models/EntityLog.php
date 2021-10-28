@@ -53,7 +53,7 @@ class EntityLog extends ActiveRecord
 
     public static function log($entityAttribute, $newModel, $oldModel = null)
     {
-        if ($newModel->{$entityAttribute} != $oldModel->{$entityAttribute}) {
+        if (empty($oldModel) || $newModel->{$entityAttribute} != $oldModel->{$entityAttribute}) {
             $entityLog = new EntityLog();
             $entityLog->oldValue = ($oldModel ? $oldModel->{$entityAttribute} : null);
             $entityLog->newValue = $newModel->{$entityAttribute};

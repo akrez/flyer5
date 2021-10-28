@@ -11,10 +11,15 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Entity */
 /* @var $form ActiveForm */
 
+if ($model->isNewRecord) {
+    $url = Url::current(['barcode' => null, 'state' => 'save']);
+} else {
+    $url = Url::current(['barcode' => $model->barcode, 'state' => 'update']);
+}
 
 $form = ActiveForm::begin([
     'options' => ['data-pjax' => true],
-    'action' => Url::current(['barcode' => $model->barcode, 'state' => ($model->isNewRecord ? 'save' : 'update'),]),
+    'action' => $url,
     'fieldConfig' => [
         'template' => '<div class="input-group">{label}{input}</div>{hint}{error}',
         'labelOptions' => [

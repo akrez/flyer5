@@ -39,6 +39,7 @@ class EntityPart extends Entity
     {
         return [
             'typeId' => 'قطعه',
+            'providerId' => 'سازنده',
         ] + parent::attributeLabels();
     }
 

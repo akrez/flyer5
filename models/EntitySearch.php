@@ -30,7 +30,7 @@ class EntitySearch extends Entity
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $categoryClass = null)
+    public function search($params, $categoryClass = null, $pagesize = 5)
     {
         $instanceModel = new $categoryClass();
         $query = $instanceModel::find()
@@ -41,7 +41,7 @@ class EntitySearch extends Entity
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => ['defaultOrder' => ['barcode' => SORT_DESC,]],
-            'pagination' => ['pagesize' => 5,]
+            'pagination' => ['pagesize' => $pagesize,]
         ]);
 
         $this->load($params);

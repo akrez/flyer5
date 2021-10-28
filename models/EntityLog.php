@@ -40,7 +40,7 @@ class EntityLog extends ActiveRecord
 
     public static function modelTitle()
     {
-        return 'تاریخچه تغییرات';
+        return 'تغییرات';
     }
 
     public static function validQuery($id = null, $entityBarcode = null)

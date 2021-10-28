@@ -58,7 +58,7 @@ class Model extends BaseModel
             'sellerId' => 'فروشنده',
             'submitAt' => 'تاریخ ثبت',
             'factorAt' => 'تاریخ فاکتور',
-            'providerId' => 'سازنده',
+            'providerId' => 'سازنده' . ' | ' . 'وارد کننده',
             //
             'qc' => 'Qc',
             'qa' => 'Qa',

@@ -136,107 +136,7 @@ $colspan = count(array_filter($visableAttributes));
                 'tableOptions' => ['style' => 'margin-bottom: 0px', 'class' => 'table table-bordered table-striped'],
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
-                'columns' => [
-                    [
-                        'attribute' => 'barcode',
-                        'visible' => isset($visableAttributes['barcode']) && $visableAttributes['barcode'],
-                    ],
-                    [
-                        'attribute' => 'qty',
-                        'visible' => isset($visableAttributes['qty']) && $visableAttributes['qty'],
-                    ],
-                    [
-                        'attribute' => 'qc',
-                        'filter' => [
-                            0 => Yii::t('yii', 'No'),
-                            1 => Yii::t('yii', 'Yes'),
-                        ],
-                        'visible' => isset($visableAttributes['qc']) && $visableAttributes['qc'],
-                        'format' => 'boolean',
-                    ],
-                    [
-                        'attribute' => 'qa',
-                        'filter' => [
-                            0 => Yii::t('yii', 'No'),
-                            1 => Yii::t('yii', 'Yes'),
-                        ],
-                        'visible' => isset($visableAttributes['qa']) && $visableAttributes['qa'],
-                        'format' => 'boolean',
-                    ],
-                    [
-                        'attribute' => 'factor',
-                        'visible' => isset($visableAttributes['factor']) && $visableAttributes['factor'],
-                    ],
-                    [
-                        'attribute' => 'price',
-                        'visible' => isset($visableAttributes['price']) && $visableAttributes['price'],
-                    ],
-                    [
-                        'attribute' => 'des',
-                        'visible' => isset($visableAttributes['des']) && $visableAttributes['des'],
-
-                    ],
-                    [
-                        'attribute' => 'place',
-                        'visible' => isset($visableAttributes['place']) && $visableAttributes['place'],
-                    ],
-                    [
-                        'attribute' => 'submitAt',
-                        'filter' => Html::activeInput('text', $searchModel, 'submitAt', ['class' => 'form-control entitySubmitatDatepicker']),
-                        'visible' => isset($visableAttributes['submitAt']) && $visableAttributes['submitAt'],
-                    ],
-                    [
-                        'attribute' => 'factorAt',
-                        'filter' => Html::activeInput('text', $searchModel, 'factorAt', ['class' => 'form-control entityFactoratDatepicker']),
-                        'visible' => isset($visableAttributes['factorAt']) && $visableAttributes['factorAt'],
-                    ],
-                    [
-                        'attribute' => 'productAt',
-                        'filter' => Html::activeInput('text', $searchModel, 'productAt', ['class' => 'form-control entityProductatDatepicker']),
-                        'visible' => isset($visableAttributes['productAt']) && $visableAttributes['productAt'],
-                    ],
-                    [
-                        'attribute' => 'providerId',
-                        'value' => function ($model) {
-                            if ($model->provider) {
-                                return $model->provider->printFullnameAndCode();
-                            }
-                        },
-                        'filter' => Select2::widget(Hrm::getSelect2FieldConfigProvider($searchModel)),
-                        'visible' => isset($visableAttributes['providerId']) && $visableAttributes['providerId'],
-                    ],
-                    [
-                        'attribute' => 'sellerId',
-                        'value' => function ($model) {
-                            if ($model->seller) {
-                                return $model->seller->printFullnameAndCode();
-                            }
-                        },
-                        'filter' => Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)),
-                        'visible' => isset($visableAttributes['sellerId']) && $visableAttributes['sellerId'],
-                    ],
-                    [
-                        'attribute' => 'typeId',
-                        'value' => function ($model) {
-                            if ($model->categoryId == TypeRaw::getCategoryClass()) {
-                                return $model->type->printNameAndUnit();
-                            }
-                            return $model->type->printNameAndShortname();
-                        },
-                        'filter' => Select2::widget($newModel::getSelect2FieldConfigType($searchModel)),
-                        'visible' => isset($visableAttributes['typeId']) && $visableAttributes['typeId'],
-                    ],
-                    [
-                        'attribute' => 'parentBarcode',
-                        'value' => function ($model) {
-                            if ($model->parentBarcode) {
-                                return $model->parent->barcode;
-                            }
-                        },
-                        'filter' => Select2::widget(Entity::getSelect2FieldConfigParent($searchModel)),
-                        'contentOptions' => ['class' => 'warning'],
-                        'visible' => isset($visableAttributes['parentBarcode']) && $visableAttributes['parentBarcode'],
-                    ],
+                'columns' => array_merge(Entity::getGridViewColumns($visableAttributes, $searchModel, $newModel), [
                     [
                         'value' => function ($dataProviderModel) use ($model, $state) {
                             $btnClass = ' btn-default ';
@@ -267,7 +167,7 @@ $colspan = count(array_filter($visableAttributes));
                         },
                         'visible' => isset($visableAttributes['_rawEntity']) && $visableAttributes['_rawEntity'],
                     ],
-                ],
+                ]),
                 'afterRow' => function ($dataProviderModel) use ($model, $state, $visableAttributes) {
                     $displayStyle = 'display: none;';
                     if ($model && $model->barcode == $dataProviderModel->barcode && $state == 'update') {

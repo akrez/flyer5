@@ -139,11 +139,11 @@ $colspan = count(array_filter($visableAttributes));
                 'columns' => [
                     [
                         'attribute' => 'barcode',
-                        'visible' => $visableAttributes['barcode'],
+                        'visible' => isset($visableAttributes['barcode']) && $visableAttributes['barcode'],
                     ],
                     [
                         'attribute' => 'qty',
-                        'visible' => $visableAttributes['qty'],
+                        'visible' => isset($visableAttributes['qty']) && $visableAttributes['qty'],
                     ],
                     [
                         'attribute' => 'qc',
@@ -151,7 +151,7 @@ $colspan = count(array_filter($visableAttributes));
                             0 => Yii::t('yii', 'No'),
                             1 => Yii::t('yii', 'Yes'),
                         ],
-                        'visible' => $visableAttributes['qc'],
+                        'visible' => isset($visableAttributes['qc']) && $visableAttributes['qc'],
                         'format' => 'boolean',
                     ],
                     [
@@ -160,40 +160,40 @@ $colspan = count(array_filter($visableAttributes));
                             0 => Yii::t('yii', 'No'),
                             1 => Yii::t('yii', 'Yes'),
                         ],
-                        'visible' => $visableAttributes['qa'],
+                        'visible' => isset($visableAttributes['qa']) && $visableAttributes['qa'],
                         'format' => 'boolean',
                     ],
                     [
                         'attribute' => 'factor',
-                        'visible' => $visableAttributes['factor'],
+                        'visible' => isset($visableAttributes['factor']) && $visableAttributes['factor'],
                     ],
                     [
                         'attribute' => 'price',
-                        'visible' => $visableAttributes['price'],
+                        'visible' => isset($visableAttributes['price']) && $visableAttributes['price'],
                     ],
                     [
                         'attribute' => 'des',
-                        'visible' => $visableAttributes['des'],
+                        'visible' => isset($visableAttributes['des']) && $visableAttributes['des'],
 
                     ],
                     [
                         'attribute' => 'place',
-                        'visible' => $visableAttributes['place'],
+                        'visible' => isset($visableAttributes['place']) && $visableAttributes['place'],
                     ],
                     [
                         'attribute' => 'submitAt',
                         'filter' => Html::activeInput('text', $searchModel, 'submitAt', ['class' => 'form-control entitySubmitatDatepicker']),
-                        'visible' => $visableAttributes['submitAt'],
+                        'visible' => isset($visableAttributes['submitAt']) && $visableAttributes['submitAt'],
                     ],
                     [
                         'attribute' => 'factorAt',
                         'filter' => Html::activeInput('text', $searchModel, 'factorAt', ['class' => 'form-control entityFactoratDatepicker']),
-                        'visible' => $visableAttributes['factorAt'],
+                        'visible' => isset($visableAttributes['factorAt']) && $visableAttributes['factorAt'],
                     ],
                     [
                         'attribute' => 'productAt',
                         'filter' => Html::activeInput('text', $searchModel, 'productAt', ['class' => 'form-control entityProductatDatepicker']),
-                        'visible' => $visableAttributes['productAt'],
+                        'visible' => isset($visableAttributes['productAt']) && $visableAttributes['productAt'],
                     ],
                     [
                         'attribute' => 'providerId',
@@ -203,7 +203,7 @@ $colspan = count(array_filter($visableAttributes));
                             }
                         },
                         'filter' => Select2::widget(Hrm::getSelect2FieldConfigProvider($searchModel)),
-                        'visible' => $visableAttributes['providerId'],
+                        'visible' => isset($visableAttributes['providerId']) && $visableAttributes['providerId'],
                     ],
                     [
                         'attribute' => 'sellerId',
@@ -213,7 +213,7 @@ $colspan = count(array_filter($visableAttributes));
                             }
                         },
                         'filter' => Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)),
-                        'visible' => $visableAttributes['sellerId'],
+                        'visible' => isset($visableAttributes['sellerId']) && $visableAttributes['sellerId'],
                     ],
                     [
                         'attribute' => 'typeId',
@@ -224,7 +224,7 @@ $colspan = count(array_filter($visableAttributes));
                             return $model->type->printNameAndShortname();
                         },
                         'filter' => Select2::widget($newModel::getSelect2FieldConfigType($searchModel)),
-                        'visible' => $visableAttributes['typeId'],
+                        'visible' => isset($visableAttributes['typeId']) && $visableAttributes['typeId'],
                     ],
                     [
                         'attribute' => 'parentBarcode',
@@ -235,7 +235,7 @@ $colspan = count(array_filter($visableAttributes));
                         },
                         'filter' => Select2::widget(Entity::getSelect2FieldConfigParent($searchModel)),
                         'contentOptions' => ['class' => 'warning'],
-                        'visible' => $visableAttributes['parentBarcode'],
+                        'visible' => isset($visableAttributes['parentBarcode']) && $visableAttributes['parentBarcode'],
                     ],
                     [
                         'value' => function ($dataProviderModel) use ($model, $state) {
@@ -246,7 +246,7 @@ $colspan = count(array_filter($visableAttributes));
                             return Html::button(Yii::t('app', 'Update'), ['class' => 'btn btn-block' . $btnClass, 'toggle' => "#row-update-" . $dataProviderModel->barcode]);
                         },
                         'format' => 'raw',
-                        'visible' => $visableAttributes['_update'],
+                        'visible' => isset($visableAttributes['_update']) && $visableAttributes['_update'],
                     ],
                     [
                         'label' => '',
@@ -256,7 +256,7 @@ $colspan = count(array_filter($visableAttributes));
                             return Html::a(' <span class="glyphicon glyphicon-list-alt"></span> ' . EntityLog::modelTitle(), Url::toRoute(['/entity-log/index', 'entityBarcode' => $model->barcode]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => '0']);
                         },
                         'footer' => false,
-                        'visible' => $visableAttributes['_entityLog'],
+                        'visible' => isset($visableAttributes['_entityLog']) && $visableAttributes['_entityLog'],
                     ],
                     [
                         'label' => '',
@@ -265,7 +265,7 @@ $colspan = count(array_filter($visableAttributes));
                         'value' => function ($model, $key, $index, $grid) {
                             return Html::a(' <span class="glyphicon glyphicon-oil"></span> ' . RawEntity::modelTitle(), Url::toRoute(['/rawentity/index', 'entityBarcode' => $model->barcode]), ['class' => 'btn btn-default btn-block btn-social', 'data-pjax' => '0']);
                         },
-                        'visible' => $visableAttributes['_rawEntity'],
+                        'visible' => isset($visableAttributes['_rawEntity']) && $visableAttributes['_rawEntity'],
                     ],
                 ],
                 'afterRow' => function ($dataProviderModel) use ($model, $state, $visableAttributes) {

@@ -88,6 +88,7 @@ class EntityController extends Controller
         //
         $barcode = empty($barcode) ? null : intval($barcode);
         $post = Yii::$app->request->post();
+        $pagesize = (int)Yii::$app->getRequest()->get('per-page', 5);
         $state = Yii::$app->request->get('state', '');
         $updateCacheNeeded = null;
         //
@@ -136,7 +137,7 @@ class EntityController extends Controller
             $newModel = new $entityClass();
         }
         //
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $entityClass);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $entityClass, $pagesize);
         return $this->render('index', [
             'state' => $state,
         ] + compact('newModel', 'searchModel', 'model', 'dataProvider'));

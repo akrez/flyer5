@@ -33,9 +33,9 @@ $this->registerCss('
                 <div class="header" style="padding-left: 10px;padding-right: 10px;"><?= Html::img('@web/cdn/img/logo.png', ['class' => 'img img-responsive', 'style' => 'min-width: 100%;']); ?></div>
             </div>
 
-            <form action="<?= Url::to(['/relation/index']) ?>" method="get" class="sidebar-form">
+            <form action="<?= Url::to(['/report/index']) ?>" method="get" class="sidebar-form">
                 <div class="input-group">
-                    <input type="text" name="parentId" class="form-control" placeholder="<?= Yii::t('app', 'Search') ?>">
+                    <input type="text" name="barcode" class="form-control" placeholder="<?= Yii::t('app', 'Search') ?>">
                     <span class="input-group-btn">
                         <button type="submit" id="search-btn" class="btn btn-flat">
                             <i class="glyphicon glyphicon-search"></i>

@@ -315,21 +315,16 @@ class Entity extends ActiveRecord
                 'format' => 'boolean',
             ],
             [
+                'attribute' => 'place',
+                'visible' => !isset($visableAttributes['place']) || $visableAttributes['place'],
+            ],
+            [
                 'attribute' => 'factor',
                 'visible' => !isset($visableAttributes['factor']) || $visableAttributes['factor'],
             ],
             [
                 'attribute' => 'price',
                 'visible' => !isset($visableAttributes['price']) || $visableAttributes['price'],
-            ],
-            [
-                'attribute' => 'des',
-                'visible' => !isset($visableAttributes['des']) || $visableAttributes['des'],
-
-            ],
-            [
-                'attribute' => 'place',
-                'visible' => !isset($visableAttributes['place']) || $visableAttributes['place'],
             ],
             [
                 'attribute' => 'submitAt',
@@ -365,6 +360,11 @@ class Entity extends ActiveRecord
                 },
                 'filter' => Select2::widget(Hrm::getSelect2FieldConfigSeller($searchModel)),
                 'visible' => !isset($visableAttributes['sellerId']) || $visableAttributes['sellerId'],
+            ],
+            [
+                'attribute' => 'des',
+                'visible' => !isset($visableAttributes['des']) || $visableAttributes['des'],
+
             ],
         ];
     }

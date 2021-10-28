@@ -73,4 +73,22 @@ class EntityLog extends ActiveRecord
     {
         return $this->hasOne(Entity::class, ['barcode' => 'entityBarcode']);
     }
+
+    public static function getGridViewColumns($visableAttributes, $searchModel, $newModel)
+    {
+        return [
+            'entityBarcode',
+            'createdAt',
+            'updatedAt',
+            'oldValue',
+            'newValue',
+            [
+                'attribute' => 'entityAttribute',
+                'value' => function ($model, $key, $index, $grid) {
+                    return $model->getAttributeLabel($model->entityAttribute);
+                },
+            ],
+            'des',
+        ];
+    }
 }

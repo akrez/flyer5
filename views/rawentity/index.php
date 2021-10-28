@@ -2,6 +2,7 @@
 
 use yii\web\View;
 use app\models\Model;
+use app\models\RawEntity;
 use yii\widgets\Pjax;
 use app\widgets\Alert;
 use app\models\TypeRaw;
@@ -80,18 +81,7 @@ Pjax::begin([
                 'tableOptions' => ['style' => 'margin-bottom: 0px', 'class' => 'table table-bordered table-striped'],
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
-                'columns' => [
-                    [
-                        'attribute' => 'rawId',
-                        'value' => function ($model) {
-                            if ($model->raw) {
-                                return $model->raw->printNameAndUnit();
-                            }
-                        },
-                        'filter' => Select2::widget(TypeRaw::getSelect2FieldConfigRaw($searchModel)),
-                    ],
-                    'qty',
-                    'des',
+                'columns' => array_merge(RawEntity::getGridViewColumns([], $searchModel, new RawEntity()), [
                     [
                         'value' => function ($dataProviderModel) use ($model, $state) {
                             $btnClass = ' btn-default ';
@@ -102,7 +92,7 @@ Pjax::begin([
                         },
                         'format' => 'raw',
                     ],
-                ],
+                ]),
                 'afterRow' => function ($dataProviderModel) use ($model, $state, $parentModel) {
                     $displayStyle = 'display: none;';
                     if ($model && $model->id == $dataProviderModel->id) {

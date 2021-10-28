@@ -38,9 +38,9 @@ class RawEntitySearch extends RawEntity
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $parentModel)
+    public function search($params = [], $barcode = null)
     {
-        $query = RawEntity::validQuery($parentModel->barcode)->with('raw');
+        $query = RawEntity::validQuery($barcode)->with('raw');
 
         // add conditions that should always apply here
 

@@ -6,6 +6,7 @@ use app\models\Type;
 use app\models\Entity;
 use app\models\RawType;
 use Exception;
+use kartik\select2\Select2;
 use Throwable;
 use Yii;
 
@@ -66,10 +67,10 @@ class RawEntity extends ActiveRecord
         return $this->hasOne(Type::class, ['id' => 'rawId']);
     }
 
-    public static function validQuery($entityBarcode, $id = null)
+    public static function validQuery($entityBarcode = null, $id = null)
     {
         $query = static::find();
-        $query->andWhere(['entityBarcode' => $entityBarcode]);
+        $query->andFilterWhere(['entityBarcode' => $entityBarcode]);
         $query->andFilterWhere(['id' => $id]);
         return $query;
     }
@@ -107,5 +108,23 @@ class RawEntity extends ActiveRecord
             Yii::$app->session->setFlash('danger', $ex->getMessage());
         }
         return false;
+    }
+
+    public static function getGridViewColumns($visableAttributes, $searchModel, $newModel)
+    {
+        return [
+            'entityBarcode',
+            [
+                'attribute' => 'rawId',
+                'value' => function ($model) {
+                    if ($model->raw) {
+                        return $model->raw->printNameAndUnit();
+                    }
+                },
+                'filter' => Select2::widget(TypeRaw::getSelect2FieldConfigRaw($searchModel)),
+            ],
+            'qty',
+            'des',
+        ];
     }
 }

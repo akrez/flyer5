@@ -38,10 +38,10 @@ class EntityLogSearch extends EntityLog
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $parentModel)
+    public function search($params, $barcode)
     {
         $query = EntityLog::validQuery()
-            ->andWhere(['entityBarcode' => $parentModel->barcode])
+            ->andWhere(['entityBarcode' => $barcode])
             ->with('entity');
         // add conditions that should always apply here
 

@@ -1,7 +1,9 @@
 <?php
 
 use app\models\Entity;
+use app\models\EntityLog;
 use app\models\EntitySearch;
+use app\models\RawEntity;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -33,4 +35,26 @@ echo GridView::widget([
     'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
     'dataProvider' => new ArrayDataProvider(['allModels' => $models, 'pagination' => false, 'sort' => false,]),
     'columns' => $columns,
+]);
+
+echo GridView::widget([
+    'layout' => ' <div class="panel-heading">' . RawEntity::modelTitle() . ' </div> {items} ',
+    'options' => ['class' => 'panel panel-primary'],
+    'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
+    'summary' => false,
+    'filterModel' => null,
+    'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+    'dataProvider' => $rawEntitySearchDataProvider,
+    'columns' => RawEntity::getGridViewColumns([], $rawEntitySearch, new RawEntity()),
+]);
+
+echo GridView::widget([
+    'layout' => ' <div class="panel-heading">' . RawEntity::modelTitle() . ' </div> {items} ',
+    'options' => ['class' => 'panel panel-primary'],
+    'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
+    'summary' => false,
+    'filterModel' => null,
+    'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+    'dataProvider' => $entityLogSearchDataProvider,
+    'columns' => EntityLog::getGridViewColumns([], $entityLogSearch, new EntityLog()),
 ]);

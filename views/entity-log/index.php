@@ -1,5 +1,6 @@
 <?php
 
+use app\models\EntityLog;
 use yii\web\View;
 use app\models\Model;
 use yii\widgets\Pjax;
@@ -80,18 +81,7 @@ Pjax::begin([
                 'tableOptions' => ['style' => 'margin-bottom: 0px', 'class' => 'table table-bordered table-striped'],
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
-                'columns' => [
-                    'createdAt',
-                    'updatedAt',
-                    'oldValue',
-                    'newValue',
-                    [
-                        'attribute' => 'entityAttribute',
-                        'value' => function ($model, $key, $index, $grid) {
-                            return $model->getAttributeLabel($model->entityAttribute);
-                        },
-                    ],
-                    'des',
+                'columns' => array_merge(EntityLog::getGridViewColumns([], $searchModel, new EntityLog()), [
                     [
                         'value' => function ($dataProviderModel) use ($model, $state) {
                             $btnClass = ' btn-default ';
@@ -102,7 +92,7 @@ Pjax::begin([
                         },
                         'format' => 'raw',
                     ],
-                ],
+                ]),
                 'afterRow' => function ($dataProviderModel) use ($model, $state, $parentModel) {
                     $displayStyle = 'display: none;';
                     if ($model && $model->id == $dataProviderModel->id) {

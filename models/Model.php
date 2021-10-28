@@ -69,6 +69,7 @@ class Model extends BaseModel
             'entityId' => 'موجودیت',
             '_count' => 'تعداد سری',
             'barcode' => 'بارکد',
+            'entityBarcode' => 'بارکد',
         ];
     }
 }

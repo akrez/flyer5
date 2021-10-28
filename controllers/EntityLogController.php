@@ -56,7 +56,7 @@ class EntityLogController extends Controller
             $newModel = new EntityLog();
         }
         //
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $parentModel);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $parentModel->barcode);
         return $this->render('index', [
             'state' => $state,
         ] + compact('newModel', 'searchModel', 'parentModel', 'parentSearchModel', 'model', 'dataProvider'));

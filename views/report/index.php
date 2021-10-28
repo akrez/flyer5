@@ -25,36 +25,61 @@ $columns = array_merge($columns, Entity::getGridViewColumns([
     'barcode' => false,
     'qty' => false,
 ], new EntitySearch(), new Entity()));
-
-echo GridView::widget([
-    'layout' => ' <div class="panel-heading">' . $model->barcode . ' (' . $model->type->name . ')' . ' </div> {items} ',
-    'options' => ['class' => 'panel panel-primary'],
-    'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
-    'summary' => false,
-    'filterModel' => null,
-    'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
-    'dataProvider' => new ArrayDataProvider(['allModels' => $models, 'pagination' => false, 'sort' => false,]),
-    'columns' => $columns,
-]);
-
-echo GridView::widget([
-    'layout' => ' <div class="panel-heading">' . RawEntity::modelTitle() . ' </div> {items} ',
-    'options' => ['class' => 'panel panel-primary'],
-    'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
-    'summary' => false,
-    'filterModel' => null,
-    'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
-    'dataProvider' => $rawEntitySearchDataProvider,
-    'columns' => RawEntity::getGridViewColumns([], $rawEntitySearch, new RawEntity()),
-]);
-
-echo GridView::widget([
-    'layout' => ' <div class="panel-heading">' . RawEntity::modelTitle() . ' </div> {items} ',
-    'options' => ['class' => 'panel panel-primary'],
-    'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
-    'summary' => false,
-    'filterModel' => null,
-    'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
-    'dataProvider' => $entityLogSearchDataProvider,
-    'columns' => EntityLog::getGridViewColumns([], $entityLogSearch, new EntityLog()),
-]);
+?>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-primary" style="position: relative;">
+            <div class="ajax-splash-show splash-style"></div>
+            <div class="panel-heading"><?= $model->barcode . ' (' . $model->type->name . ')' ?></div>
+            <?= GridView::widget([
+                'layout' => ' {items} ',
+                'options' => ['class' => 'table-responsive'],
+                'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
+                'summary' => false,
+                'filterModel' => null,
+                'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+                'dataProvider' => new ArrayDataProvider(['allModels' => $models, 'pagination' => false, 'sort' => false,]),
+                'columns' => $columns,
+            ]);
+            ?>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-primary" style="position: relative;">
+            <div class="ajax-splash-show splash-style"></div>
+            <div class="panel-heading"><?= RawEntity::modelTitle() ?></div>
+            <?= GridView::widget([
+                'layout' => ' {items} ',
+                'options' => ['class' => 'table-responsive'],
+                'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
+                'summary' => false,
+                'filterModel' => null,
+                'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+                'dataProvider' => $rawEntitySearchDataProvider,
+                'columns' => RawEntity::getGridViewColumns([], $rawEntitySearch, new RawEntity()),
+            ]);
+            ?>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-primary" style="position: relative;">
+            <div class="ajax-splash-show splash-style"></div>
+            <div class="panel-heading"><?= RawEntity::modelTitle() ?></div>
+            <?= GridView::widget([
+                'layout' => ' {items} ',
+                'options' => ['class' => 'table-responsive'],
+                'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
+                'summary' => false,
+                'filterModel' => null,
+                'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+                'dataProvider' => $entityLogSearchDataProvider,
+                'columns' => EntityLog::getGridViewColumns([], $entityLogSearch, new EntityLog()),
+            ]);
+            ?>
+        </div>
+    </div>
+</div>

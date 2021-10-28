@@ -136,6 +136,7 @@ $colspan = count(array_filter($visableAttributes));
                 'tableOptions' => ['style' => 'margin-bottom: 0px', 'class' => 'table table-bordered table-striped'],
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
+                'options' => ['class' => 'table-responsive'],
                 'columns' => array_merge(Entity::getGridViewColumns($visableAttributes, $searchModel, $newModel), [
                     [
                         'value' => function ($dataProviderModel) use ($model, $state) {

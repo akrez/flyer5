@@ -46,6 +46,7 @@ $form = ActiveForm::begin([
         'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
         'summary' => false,
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+        'options' => ['class' => 'table-responsive'],
         'dataProvider' => new ArrayDataProvider(['allModels' => ($parentModel ? [$parentModel] : []), 'pagination' => false, 'sort' => false, 'modelClass' => ($parentModel ? null : 'app\models\Entity' )]),
         'columns' => require ('_columns.php'),
     ]);
@@ -60,6 +61,7 @@ $form = ActiveForm::begin([
         'options' => ['class' => 'panel panel-primary'],
         'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
         'summary' => false,
+        'options' => ['class' => 'table-responsive'],
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
         'dataProvider' => new ArrayDataProvider(['allModels' => [$model], 'pagination' => false, 'sort' => false]),
         'columns' => require ('_columns.php'),
@@ -75,6 +77,7 @@ $form = ActiveForm::begin([
         'options' => ['class' => 'panel panel-warning'],
         'tableOptions' => ['style' => 'text-align: center;', 'class' => "table table-striped table-bordered"],
         'summary' => false,
+        'options' => ['class' => 'table-responsive'],
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
         'dataProvider' => $dataProvider,
         'columns' => require ('_columns.php'),

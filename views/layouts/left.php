@@ -80,6 +80,13 @@ $this->registerCss('
                     </ul>
                 </li>
 
+                <li class="treeview">
+                    <a href="#"><i class="glyphicon glyphicon-list"></i><span>گزارشات</span></a>
+                    <ul class="treeview-menu" style="right: 49px;">
+                        <li><a href="<?= Url::toRoute(['/report/entity']) ?>"><?= Entity::modelTitle() ?></a></li>
+                    </ul>
+                </li>
+
                 <li class="treeview active">
                     <a href="#"><i class="glyphicon glyphicon-time"></i><span>بازدید اخیر</span></a>
                     <ul class="treeview-menu" style="right: 49px;">

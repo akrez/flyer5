@@ -1,18 +1,16 @@
 {
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7",
+        "php": ">= 7.2",
         "yiisoft/yii2": "*",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "yiisoft/yii2-twig": "*",
         "kartik-v/yii2-widget-select2": "*",
         "yiisoft/yii2-jui": "*",
         "yiisoft/yii2-imagine": "*",
-        "jeroendesloovere/vcard": "*",
         "yiisoft/yii2-bootstrap4": "*",
-        "yiisoft/yii2-httpclient": "*",
-        "php-amqplib/php-amqplib": "*"
+        "phpoffice/phpspreadsheet": "*",
+        "yiisoft/yii2-httpclient": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
@@ -20,7 +18,13 @@
         "yiisoft/yii2-faker": "*",
         "codeception/base": "*",
         "codeception/verify": "*",
-        "codeception/specify": "*"
+        "codeception/specify": "*",
+        "codeception/codeception": "*",
+        "codeception/module-filesystem": "*",
+        "codeception/module-yii2": "*",
+        "codeception/module-asserts": "*",
+        "symfony/browser-kit": "*",
+        "bizley/migration": "*"
     },
     "config": {
         "disable-tls": true,
@@ -28,6 +32,17 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
+        }
+    },
+    "extra": {
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "runtime": "0777",
+                    "web/assets": "0777",
+                    "yii": "0755"
+                }
+            ]
         }
     },
     "repositories": [

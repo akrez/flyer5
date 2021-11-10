@@ -125,6 +125,24 @@ $colspan = count(array_filter($visableAttributes));
         <?= Alert::widget() ?>
     </div>
 </div>
+
+<div class="row mb10">
+    <div class="col-sm-10">
+    </div>
+    <div class="col-sm-2">
+        <?php
+        $uploadUrl = Url::current(['state' => 'upload']);
+        $uploadModel = new Entity(['scenario' => 'upload']);
+        $id = "upload-file";
+        //
+        echo Html::beginForm($uploadUrl, 'post', ['enctype' => 'multipart/form-data']);
+        echo Html::fileInput('file', null, ['id' => $id, 'class' => 'hidden', 'onChange' => "$(this).closest('form').submit();"]);
+        echo Html::label(' <span class="glyphicon glyphicon-upload"></span> ' . 'آپلود از اکسل', $id, ['class' => 'btn btn-block btn-social btn-info']);
+        echo Html::endForm();
+        ?>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-primary" style="position: relative;">
@@ -203,7 +221,6 @@ $colspan = count(array_filter($visableAttributes));
     </div>
 </div>
 <?php
-
 echo LinkPager::widget([
     'pagination' => $dataProvider->getPagination(),
     'options' => [

@@ -2,19 +2,19 @@
 
 namespace app\models;
 
+use Yii;
+use Exception;
+use Throwable;
 use app\models\Hrm;
 use app\models\Type;
+use yii\helpers\Url;
 use yii\helpers\Html;
+use app\components\Jdf;
 use app\models\RawType;
 use app\models\RawEntity;
 use app\components\Helper;
-use app\components\Jdf;
-use app\models\ActiveRecord;
-use Yii;
-use Exception;
 use kartik\select2\Select2;
-use Throwable;
-use yii\helpers\Url;
+use app\models\ActiveRecord;
 
 /**
  * This is the model class for table "entity".
@@ -35,6 +35,7 @@ use yii\helpers\Url;
  * @property string|null $parentBarcode
  * @property int $typeId
  * @property int|null $qty
+ * @property int|null $excelIndex
  * @property string|null $updatedAt
  * @property string|null $createdAt
  *
@@ -51,6 +52,7 @@ class Entity extends ActiveRecord
     public const BARCODE_MAX = '1';
 
     public $count = 1;
+    public $file;
 
     public static function tableName()
     {
@@ -90,6 +92,8 @@ class Entity extends ActiveRecord
             [['parentBarcode'], 'compare', 'operator' => '!=', 'compareAttribute' => 'barcode'],
             [['submitAt', 'factorAt', 'productAt'], 'validateDate'],
             [['submitAt', 'factorAt', 'productAt'], 'match', 'pattern' => '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/'],
+            //
+            [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xlsx', 'on' => 'upload'],
         ];
     }
 
@@ -220,6 +224,24 @@ class Entity extends ActiveRecord
 
     public static function batchInsert($newModel, $barcodes)
     {
+        $newModel->categoryId = $newModel::getCategoryClass();
+        if (!$newModel->validate()) {
+            $errors = [];
+            foreach ($newModel->errors as $attributeErrors) {
+                foreach ($attributeErrors as $attributeError) {
+                    $errors[] = $attributeError;
+                }
+            }
+            Yii::$app->session->setFlash('danger', implode(' , ', $errors));
+            return false;
+        }
+
+        $duplicateBarcodes = Entity::validQuery()->select('barcode')->where(['barcode' => $barcodes])->column();
+        if ($duplicateBarcodes) {
+            Yii::$app->session->setFlash('danger', 'این بارکدها تکراری هستند: ' . implode(' , ', $duplicateBarcodes));
+            return false;
+        }
+
         $modifyAt = Jdf::jdate('Y-m-d H:i:s');
         $transaction = Yii::$app->db->beginTransaction();
         try {
@@ -231,8 +253,6 @@ class Entity extends ActiveRecord
                 foreach ($columns as $columnIndex => $column) {
                     if ($column == 'barcode') {
                         $row[$columnIndex] = $barcode;
-                    } elseif ($column == 'categoryId') {
-                        $row[$columnIndex] = $newModel::getCategoryClass();
                     } elseif ($column == 'createdAt' || $column == 'updatedAt') {
                         $row[$columnIndex] = $modifyAt;
                     } elseif (mb_strlen($attibutes[$column])) {

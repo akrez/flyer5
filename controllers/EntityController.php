@@ -13,7 +13,10 @@ use app\models\EntityRaw;
 use app\models\EntityReseller;
 use app\models\EntitySamane;
 use app\models\TypeRaw;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Yii;
+use yii\web\UploadedFile;
 
 class EntityController extends Controller
 {
@@ -106,12 +109,7 @@ class EntityController extends Controller
             for ($i = 0; $i < $newModel->count; $i++) {
                 $barcodes[] = $newModel->barcode + $i;
             }
-            $duplicateBarcodes = Entity::validQuery()->select('barcode')->where(['barcode' => $barcodes])->column();
-            if ($duplicateBarcodes) {
-                Yii::$app->session->setFlash('danger', 'این بارکدها تکراری هستند: ' . implode(' , ', $duplicateBarcodes));
-            } else {
-                $updateCacheNeeded = Entity::batchInsert($newModel, $barcodes);
-            }
+            $updateCacheNeeded = Entity::batchInsert($newModel, $barcodes);
         } elseif ($state == 'update' && $model) {
             $updateCacheNeeded = Helper::store($model, $post, [
                 'categoryId' => $categoryClass,
@@ -127,7 +125,6 @@ class EntityController extends Controller
             } elseif ($state == 'save') {
                 $newModel = new $entityClass();
             }
-            $newModel = new $entityClass();
         }
         //
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $entityClass, $pagesize);

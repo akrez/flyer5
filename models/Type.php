@@ -3,6 +3,8 @@
 namespace app\models;
 
 use app\components\Helper;
+use Exception;
+use Throwable;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -167,5 +169,50 @@ class Type extends ActiveRecord
             'placeholder' => '',
             'id' => $id,
         ]);
+    }
+
+    public static function batchInsertByNames($categoryId, $names)
+    {
+        $names = array_map('trim', $names);
+        $names = array_filter($names);
+        $names = array_unique($names);
+        //
+        $errors = [];
+        //
+        $columns = array_keys((new Type)->attributes);
+        //
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $rows = [];
+            foreach ($names as $name) {
+                $newModel = new Type();
+                $newModel->name = $name;
+                $newModel->shortname = $name;
+                $newModel->categoryId = $categoryId;
+                if ($newModel->validate()) {
+                    $row = [];
+                    foreach ($columns as $column) {
+                        $row[$column] = $newModel->{$column};
+                    }
+                    $rows[] = $row;
+                } else {
+                    $errors[] = $name;
+                }
+                unset($newModel);
+            }
+            if ($columns && $rows) {
+                $status = Yii::$app->db->createCommand()->batchInsert(self::tableName(), $columns, $rows)->execute();
+                if ($status) {
+                    $transaction->commit();
+                    return $errors;
+                }
+            }
+        } catch (Throwable $ex) {
+            Yii::$app->session->setFlash('danger', $ex->getMessage());
+        } catch (Exception $ex) {
+            Yii::$app->session->setFlash('danger', $ex->getMessage());
+        }
+        $transaction->rollBack();
+        return $names;
     }
 }

@@ -12,9 +12,11 @@ use yii\grid\GridViewAsset;
 use yii\helpers\HtmlPurifier;
 use app\assets\DatepickerAsset;
 use app\models\RawType;
+use app\models\Type;
 use app\models\TypePart;
 use app\models\TypeReseller;
 use kartik\select2\Select2;
+use yii\bootstrap\ActiveForm;
 
 $this->title = $newModel::modelTitle();
 MaskedInputAsset::register($this);
@@ -141,6 +143,24 @@ if ($newModel::getCategoryClass() != TypeRaw::getCategoryClass()) {
         <?= Alert::widget() ?>
     </div>
 </div>
+
+<div class="row mb10">
+    <div class="col-sm-10">
+    </div>
+    <div class="col-sm-2">
+        <?php
+        $uploadUrl = Url::current(['state' => 'upload']);
+        $uploadModel = new Type(['scenario' => 'upload']);
+        $id = "upload-file";
+        //
+        echo Html::beginForm($uploadUrl, 'post', ['enctype' => 'multipart/form-data']);
+        echo Html::fileInput('file', null, ['id' => $id, 'class' => 'hidden', 'onChange' => "$(this).closest('form').submit();"]);
+        echo Html::label(' <span class="glyphicon glyphicon-upload"></span> ' . 'آپلود از اکسل', $id, ['class' => 'btn btn-block btn-social btn-info']);
+        echo Html::endForm();
+        ?>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-primary" style="position: relative;">
@@ -264,6 +284,32 @@ if ($newModel::getCategoryClass() != TypeRaw::getCategoryClass()) {
                     <tr class="success">
                         <td colspan="<?= $colspan ?>">
                             <?= $this->render('_form', ['model' => $newModel]) ?>
+                        </td>
+                    </tr>
+                    <tr class="success">
+                        <td colspan="<?= $colspan ?>">
+                            <?php
+                            echo Html::beginForm(Url::current(['id' => null, 'state' => 'batch',]), 'post', ['data-pjax' => true]);
+                            ?>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <?php
+                                    echo Html::textarea('batch', $batch, [
+                                        'class' => 'form-control',
+                                    ]);
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="row pt10">
+                                <div class="col-sm-2">
+                                    <?php
+                                    echo Html::submitButton(' <span class="glyphicon glyphicon-plus"></span>' . ' ' . 'افزودن چندین مورد', ['class' => 'btn btn-block btn-social btn-success']);
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            echo Html::endForm();
+                            ?>
                         </td>
                     </tr>
                 </tbody>

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\Helper;
+use app\models\Type;
 use app\models\TypeSearch;
 use app\models\TypeRaw;
 use app\models\TypePart;
@@ -10,7 +11,9 @@ use app\models\TypeSamane;
 use app\models\TypeFarvand;
 use app\models\TypeProperty;
 use app\models\TypeReseller;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
+use yii\web\UploadedFile;
 
 class TypeController extends Controller
 {
@@ -101,6 +104,7 @@ class TypeController extends Controller
         $post = Yii::$app->request->post();
         $state = Yii::$app->request->get('state', '');
         $updateCacheNeeded = null;
+        $batch = Yii::$app->request->post('batch', '');
         //
         if ($id) {
             $model = Helper::findOrFail($categoryClass::validQuery()->andWhere(['id' => $id]));
@@ -114,6 +118,9 @@ class TypeController extends Controller
             $updateCacheNeeded = Helper::store($newModel, $post, [
                 'categoryId' => $categoryClass,
             ]);
+        } elseif ($state == 'batch' && $batch) {
+            $batch = Type::batchInsertByNames($categoryClass, explode("\n", $batch));
+            $batch = implode("\n", $batch);
         } elseif ($state == 'update' && $model) {
             $updateCacheNeeded = Helper::store($model, $post, [
                 'categoryId' => $categoryClass,
@@ -128,6 +135,7 @@ class TypeController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $categoryClass);
         return $this->render('index', [
             'state' => $state,
+            'batch' => $batch,
         ] + compact('newModel', 'searchModel', 'model', 'dataProvider'));
     }
 

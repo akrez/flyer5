@@ -43,7 +43,7 @@ class TypeSearch extends Type
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => ['defaultOrder' => ['id' => SORT_DESC,]],
-            'pagination' => ['pagesize' => 5,]
+            'pagination' => ['pagesize' => 15,]
         ]);
 
         $this->load($params);

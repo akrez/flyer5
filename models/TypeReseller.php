@@ -28,7 +28,7 @@ class TypeReseller extends Type
     {
         return array_merge($this->defaultRules(), [
             [['unit'], 'string', 'max' => 63],
-            [['unit'], 'required'],
+            //[['unit'], 'required'],
         ]);
     }
 

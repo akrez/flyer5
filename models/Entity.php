@@ -295,6 +295,71 @@ class Entity extends ActiveRecord
         }
     }
 
+    public static $batchInsertByExcelCategoryIdCache = [];
+    public static function batchInsertByExcel($categoryId, $rows)
+    {
+        $errors = [];
+        foreach ((array)$rows as $row) {
+            $excelIndex = null;
+            try {
+                $row = array_map('trim', $row) + [0 => null, 1 => null, 2 => null, 3 => null, 4 => null, 5 => null];
+                $excelIndex = $row[0];
+                unset($row[0]);
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+                //
+                if (!$excelIndex) {
+                    $errors[] = "(" . $excelIndex . "):" . "ایندکس اکسل تعیین نشده است";
+                    continue;
+                }
+                if (EntitySearch::validQuery($categoryId)->andWhere(['excelIndex' => $excelIndex])->one()) {
+                    $errors[] = "(" . $excelIndex . "):" . "ایندکس اکسل قبلا ثبت شده است";
+                    continue;
+                }
+                //
+                if (!isset($row[1]) || !$row[1]) {
+                    $errors[] = "(" . $excelIndex . "):" . "دسته بندی تعیین نشده است";
+                    continue;
+                }
+                //
+                $typeId = null;
+                if (isset(self::$batchInsertByExcelCategoryIdCache[$row[1]])) {
+                } elseif ($type = TypeSearch::validQueryByCategoryIdShortname($categoryId, $row[1])->one()) {
+                    self::$batchInsertByExcelCategoryIdCache[$row[1]] = $type->id;
+                } elseif (!Type::batchInsertByNames($categoryId, [$row[1]]) && $type = TypeSearch::validQueryByCategoryIdShortname($categoryId, $row[1])->one()) {
+                    self::$batchInsertByExcelCategoryIdCache[$row[1]] = $type->id;
+                } else {
+                    self::$batchInsertByExcelCategoryIdCache[$row[1]] = null;
+                }
+                $typeId = self::$batchInsertByExcelCategoryIdCache[$row[1]];
+                if (empty($typeId)) {
+                    $errors[] = "(" . $excelIndex . "):" . "نوع تعیین نشده است";
+                    continue;
+                }
+
+                //
+                $model = new Entity();
+                $model->excelIndex = $excelIndex;
+                $model->typeId = $typeId;
+                $model->barcode = $row[2];
+                $model->place = $row[3];
+                $model->des = $row[4];
+                $model->qty = $row[5];
+                $model->categoryId = $categoryId;
+                if ($model->save()) {
+                } else {
+                    $errors[] = "(" . $excelIndex . "):" . implode(", ",  $model->getErrorSummary(true));
+                    continue;
+                }
+            } catch (\Throwable $th) {
+                $errors[] = "(" . $excelIndex . "):" . $th->getLine() . $th->getMessage();
+                continue;
+            }
+        }
+        return $errors;
+    }
+
     public static function getGridViewColumns($visableAttributes, $searchModel, $newModel)
     {
         return [
@@ -401,6 +466,11 @@ class Entity extends ActiveRecord
             [
                 'attribute' => 'updatedAt',
                 'visible' => !isset($visableAttributes['updatedAt']) || $visableAttributes['updatedAt'],
+
+            ],
+            [
+                'attribute' => 'excelIndex',
+                'visible' => !isset($visableAttributes['excelIndex']) || $visableAttributes['excelIndex'],
 
             ],
             [

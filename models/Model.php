@@ -70,6 +70,8 @@ class Model extends BaseModel
             '_count' => 'تعداد سری',
             'barcode' => 'بارکد',
             'entityBarcode' => 'بارکد',
+            //
+            'excelIndex' => 'ایندکس اکسل',
         ];
     }
 }

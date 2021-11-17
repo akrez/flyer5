@@ -111,6 +111,7 @@ $visableAttributes = [
     'des' => true,
     'submitAt' => true,
     'typeId' => true,
+    'excelIndex' => true,
     //
     'parentBarcode' => !$visableInRaw,
     //

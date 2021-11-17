@@ -110,6 +110,26 @@ class EntityController extends Controller
                 $barcodes[] = $newModel->barcode + $i;
             }
             $updateCacheNeeded = Entity::batchInsert($newModel, $barcodes);
+        } elseif ($state == 'upload' && Yii::$app->request->isPost) {
+            $uploadedFile = UploadedFile::getInstanceByName('file');
+            $inputFileName = $uploadedFile->tempName;
+
+            $reader = IOFactory::createReader('Xlsx');
+            $spreadsheet = $reader->load($inputFileName);
+
+            $sheet = $spreadsheet->getActiveSheet();
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+            //
+            $data = (array)$sheet->rangeToArray('A0:' . $highestColumn . $highestRow, NULL, FALSE, FALSE);
+            if (count($data) > 2) {
+                unset($data[0]);
+                unset($data[1]);
+                $errors = Entity::batchInsertByExcel($categoryClass, $data);
+                if ($errors) {
+                    Yii::$app->session->setFlash('danger', implode('<br/>', $errors));
+                }
+            }
         } elseif ($state == 'update' && $model) {
             $updateCacheNeeded = Helper::store($model, $post, [
                 'categoryId' => $categoryClass,

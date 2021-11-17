@@ -128,6 +128,11 @@ class Type extends ActiveRecord
         return $query;
     }
 
+    public static function validQueryByCategoryIdShortname($categoryId, $shortName = null)
+    {
+        return static::validQuery()->andWhere(['categoryId' => $categoryId])->andWhere(['shortname' => $shortName]);
+    }
+
     public function printNameAndShortname()
     {
         return $this->name . ' (' . $this->shortname . ')';
